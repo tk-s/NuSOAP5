@@ -1,0 +1,969 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"htac",
+				"htaccessContent"
+			],
+			[
+				"date_timez",
+				"date_timezone_set"
+			],
+			[
+				"fil",
+				"filterGroups"
+			],
+			[
+				"utf",
+				"utf8_encode"
+			],
+			[
+				"CDR00000",
+				"CDR0000000000"
+			],
+			[
+				"_fe",
+				"_fetch_assoc"
+			],
+			[
+				"_renderERrr",
+				"_renderErrorView"
+			],
+			[
+				"filter",
+				"FilterParams"
+			],
+			[
+				"patter",
+				"patternMismatch"
+			],
+			[
+				"maxlen",
+				"maxlength"
+			],
+			[
+				"_page",
+				"_buildPageTitle"
+			],
+			[
+				"_pa",
+				"_parseHTTPRef"
+			],
+			[
+				"func_g",
+				"func_get_args"
+			],
+			[
+				"contri",
+				"contributor"
+			],
+			[
+				"marker",
+				"markerCount"
+			],
+			[
+				"html",
+				"htmlspecialchars_decode"
+			],
+			[
+				"Flyout",
+				"FlyoutFilterView"
+			],
+			[
+				"expand",
+				"expand"
+			],
+			[
+				"base",
+				"baseComponents"
+			],
+			[
+				"_Filter",
+				"_filterBuilder"
+			],
+			[
+				"_FIlter",
+				"_filterBuilder"
+			],
+			[
+				"getProtoc",
+				"GetProtocolsByDiseaseAndGene"
+			],
+			[
+				"curl_err",
+				"curl_error"
+			],
+			[
+				"_render",
+				"_renderErrorView"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Base.php",
+			"settings":
+			{
+				"buffer_size": 33725,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/apache/htdocs/NuSOAP/Fault.php",
+			"settings":
+			{
+				"buffer_size": 5200,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/apache/htdocs/NuSOAP/Parser.php",
+			"settings":
+			{
+				"buffer_size": 32590,
+				"line_ending": "Windows",
+				"name": "<?php"
+			}
+		},
+		{
+			"file": "functions.php",
+			"settings":
+			{
+				"buffer_size": 5748,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 335.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"up",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"install 	",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"install p	",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"",
+				"About"
+			]
+		],
+		"width": 466.0
+	},
+	"console":
+	{
+		"height": 425.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": true,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/apache/htdocs/NuSoap/Base.php",
+		"/C/apache/htdocs/NuSoap/functions.php",
+		"/C/Users/carbond2/AppData/Roaming/Sublime Text 2/Packages/DocBlockr/Base File.sublime-settings",
+		"/C/Users/carbond2/AppData/Roaming/Sublime Text 2/Packages/User/Base File.sublime-settings",
+		"/C/apache/htdocs/NuSoap/DCarbone/NuSOAP.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/nusoap/lib/nusoap.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/.htaccess",
+		"/C/apache/htdocs/mycancergenome-YII/framework/vendors/htmlpurifier/HTMLPurifier.standalone.php",
+		"/C/apache/htdocs/mycancergenome-YII/framework/web/CController.php",
+		"/C/apache/htdocs/mycancergenome-YII/protected/controllers/SiteController.php",
+		"/C/apache/htdocs/mycancergenome-YII/protected/views/footers/main.php",
+		"/C/apache/htdocs/mycancergenome-YII/protected/views/headers/main.php",
+		"/C/apache/htdocs/mycancergenome-YII/index.php",
+		"/C/apache/htdocs/mycancergenome-YII/protected/views/site/index.php",
+		"/C/apache/htdocs/mycancergenome-YII/protected/components/HomeController.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/ODATA/FilterBuilder/FilterItem.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/ClinicalTrialFilterModel.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/ClinicalTrialFlyoutFilter.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/css/basic.css",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/setup.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/assetpackager.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/clinicaltrials/ct_results.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/ClinicalTrialView.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/jquery.serializeObject.min.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/ClinicalTrialViewFilters.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/CountryTrialView.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/VUTrialView.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/views/StateTrialView.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/controllers/protocol.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/ODATA/FilterBuilder.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/moCURL.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/Log.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/User_agent.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/Upload.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/Migration.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/helpers/text_helper.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/helpers/smiley_helper.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/helpers/html_helper.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/helpers/download_helper.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/Loader.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/Security.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/Router.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/Hooks.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/Common.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/ODATA.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/GenomeService/Protocol/FilterBuilder.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/cache/7c9c79625a7b5ee750c498d6eec69b07.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/css/clinicaltrials.css",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/jquery.dataTables.extensions.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/navigation.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/content/content_two_tab.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/css/trialstable.css",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/backbone.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/content/content_three_tab.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/css/navigation.css",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/jquery.dataTables.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/jquery.dataTables.min.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/cache/ClinicalTrialView.js.parsed.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/local/database.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/local/sharepoint.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/local/genomeservice.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/controllers/content.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/Sharepoint/Query/ODATA.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/development/config.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/environment.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/mimes.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/Javascript.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/Driver.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/libraries/javascript/Jquery.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/helpers/url_helper.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/DB.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/DB_query_builder.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/Config.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/core/CodeIgniter.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/local/config.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/releasecandidate/config.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/production/config.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/MyCancerGenome/src/MyCancerGenome/Controller/IndexController.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/Module.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/config/module.config.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/src/REST/Controller/InfoController.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/src/REST/PostProcessor/Image.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/src/REST/PostProcessor/Json.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/src/REST/PostProcessor/AbstractPostProcessor.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/config/mycancergenome.config.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/src/REST/Controller/GenomeController.php",
+		"/C/apache/htdocs/mycancergenome-ZEND/module/REST/autoload_classmap.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/testing/genomeservice.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/testing/config.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/clinicaltrials/ct_no_results.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/oCURL/oCURLCollection.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/Sharepoint/SPCollection.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/Sharepoint/Navigation/SPNavCollection.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/development/genomeservice.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/index2.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/tools/tools_molecular.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/content/content_other.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/development/sharepoint.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/production/sharepoint.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/releasecandidate/sharepoint.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/testing/sharepoint.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/clinicaltrials.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/core/MY_Controller.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/index.html",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/views/errors/error_503.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/GenomeService/Protocol.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/GenomeService/Query.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/controllers/clinicaltrials.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/development/database.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/config/testing/database.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/MyCancerGenome/Page/Content.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/assets/js/content.js",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8_new/oci8_new_driver.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8_new/oci8_new_utility.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8_new/oci8_new_forge.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8_new/oci8_new_result.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/models/Vanderbilt_trials.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/DB_result.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8/oci8_forge.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8/oci8_utility.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8/oci8_driver.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/DB_driver.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/system/database/drivers/oci8/oci8_result.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/helpers/error_helper.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/SikkerHansen/MetaTags.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/Collection.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/Collection/Item.php",
+		"/C/apache/htdocs/mycancergenome-NEXT/application/libraries/Vanderbilt/Collection/Item/ListItems.php"
+	],
+	"find":
+	{
+		"height": 36.0
+	},
+	"find_in_files":
+	{
+		"height": 92.0,
+		"where_history":
+		[
+			"C:\\apache\\htdocs\\NuSoap",
+			"C:\\apache\\htdocs\\UglifyJS2",
+			"C:\\apache\\htdocs\\mycancergenome-YII\\",
+			"C:\\apache\\htdocs\\mycancergenome-YII\\application\\",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\application\\",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\assets\\",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\assets\\js",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\assets",
+			"C:\\apache\\htdocs\\mycancergenome-ZEND\\",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\assets",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\application",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\assets\\css",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\application",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\assets",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\application",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\system",
+			"C:\\apache\\htdocs\\mycancergenome-NEXT\\application",
+			"",
+			"ClinicalTrialViewFilters.js",
+			"FilterBuilder.php"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"getPrefix",
+			"decode_utf8",
+			"multirefs",
+			"$this->debug",
+			"n _debug",
+			"n debug",
+			"debug_flag",
+			"body_position",
+			"depth_array",
+			"fault_detail",
+			"fault_str",
+			"default_namespace",
+			"rootStruct_name",
+			"root_struct",
+			"xml_encoding",
+			"var ",
+			"serialize_val",
+			"$this->faultactor",
+			"$this->faultcode",
+			"namespaces",
+			"$this->usedNamespaces",
+			"usedNamespaces",
+			"getPrefixFromNamespace",
+			"$this->contractQname",
+			"split",
+			"soap_defencoding",
+			"$this->serialize_val",
+			"is_string(",
+			"soapDefEnc",
+			"defEncoding",
+			"\\t",
+			"==",
+			"$this->expandEntities",
+			"expandEntities",
+			"=$",
+			"serialize_val",
+			"$this->debug",
+			"protected function ",
+			"$_",
+			"$this->error_str",
+			"$this->charencoding",
+			"charencoding",
+			"private",
+			"_error_str",
+			"_debug_str",
+			"soap_defencoding",
+			"GLOBALS",
+			"function _",
+			"makePredicate",
+			"AST_Node",
+			"($env)",
+			"{$env}",
+			"$env ",
+			"$hdr",
+			"$cfgFile",
+			"$ary",
+			"site_url",
+			"spl_autoload_register",
+			"spl_autoload_register ",
+			"<?=\"\"?>",
+			"base_url()",
+			"render(",
+			"text-",
+			"$key",
+			"getExpandKey",
+			"getexpandkey",
+			"createFilterFromArray",
+			"FilterBuilder",
+			"filterbuilder",
+			"FilterBuilder",
+			"console.",
+			"var_dump",
+			"filter_menu",
+			"\"success\": function(result, response, status)",
+			"if (status === 200 && typeof result",
+			"var_dump",
+			"Main",
+			"var_dump",
+			"getPossibleQueryName",
+			"var_dump",
+			"$this->_data",
+			"oCURLCollection",
+			"$object2",
+			"$object1",
+			"$mh",
+			"$ch2",
+			"$ch1",
+			"cancelSubmit",
+			"},\n",
+			"}\n",
+			");\n",
+			"_fetch_assoc",
+			"num_rows(",
+			"_bind_params(",
+			"compile_binds",
+			"_execute(",
+			"n version(",
+			"char_set",
+			"@access Private",
+			"@access Protected",
+			"@access Public",
+			"n error",
+			"error(",
+			"query(",
+			"result_array",
+			"result(",
+			"_fetch_object",
+			"_update",
+			"_from_tables",
+			"n query",
+			"query",
+			"trans_commit",
+			"field_data",
+			"error()",
+			"n _limit",
+			"image/cache",
+			"subunit",
+			"subunits",
+			"_this._processing.addClass('show');",
+			"subunits",
+			"subUnits",
+			"\");\n",
+			"view",
+			"subUnits",
+			"console.info",
+			"subUnits",
+			"$CI",
+			"\\t"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"decodeUTF8",
+			"multiRefs",
+			"$this->_debug",
+			"debugFlag",
+			"bodyPosition",
+			"depthArray",
+			"faultDetail",
+			"faultStr",
+			"defaultNamespace",
+			"rootStructName",
+			"rootStruct",
+			"xmlEncoding",
+			"public ",
+			"serializeVal",
+			"$this->_faultActor",
+			"$this->_faultCode",
+			"static::$_usedNamespaces",
+			"soapDefEncoding",
+			"$this->serializeVal",
+			"    ",
+			"===",
+			"$this->_expandEntities",
+			"={$",
+			"serializeVal",
+			"$this->_debug",
+			"protected function _",
+			"$",
+			"self::$_errorStr",
+			"self::$_charEncoding",
+			"protected",
+			"_errorStr",
+			"_debugStr",
+			"soapDefEncoding",
+			"($environment)",
+			"{$environment}",
+			"$environment ",
+			"$envContent",
+			"$envFile",
+			"base_url",
+			"",
+			"\"\"",
+			"$id",
+			"\"success\": function(data, textStatus, jqXHR)",
+			"if (status.status === 200 && typeof result",
+			"REST",
+			"$this->_internalData",
+			"$object4",
+			"$object3",
+			"$mh2",
+			"$ch4",
+			"$ch3",
+			"@access private",
+			"@access protected",
+			"@access public",
+			"subunits",
+			"$this",
+			"    ",
+			"<?=base_url()?>",
+			"->getAuthors($this->_disease->getName())",
+			"countries.subunits",
+			"#content_container .side_nav, #content_container .mcg_nav",
+			"Web_Controller",
+			"subUnits",
+			"table.trialstable",
+			"class=\"sorter\"",
+			"Referrer",
+			"referrer",
+			"    ",
+			"$",
+			"$this->urlref",
+			"URLRef",
+			"getGETRef",
+			"getHTTPRef",
+			"_parseHTTPRef",
+			"@copyright	Copyright (c) 2008 - 2013, EllisLab, Inc. (http://ellislab.com/)",
+			"@copyright  Copyright (c) 2008 - 2013, EllisLab, Inc. (http://ellislab.com/)",
+			"$this->file_name",
+			"$_SERVER['SERVER_NAME'].\"/\"",
+			"\"items\"",
+			"$items",
+			"$article",
+			"$result",
+			"$item",
+			"AboutUs\"",
+			"this.fieldset",
+			"$this->filterClauses",
+			"$this->_data",
+			"$this->expandKeys"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": false,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Base.php",
+					"settings":
+					{
+						"buffer_size": 33725,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2555,
+								2555
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110
+							],
+							"gjslint_options":
+							[
+							],
+							"incomplete_sync": null,
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"remote_loading": false,
+							"sublimelinter": true,
+							"sublimelinter_delay": 0.5,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": true,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 554.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/apache/htdocs/NuSOAP/Fault.php",
+					"settings":
+					{
+						"buffer_size": 5200,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2556,
+								2556
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 634.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/apache/htdocs/NuSOAP/Parser.php",
+					"settings":
+					{
+						"buffer_size": 32590,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11433,
+								11433
+							]
+						],
+						"settings":
+						{
+							"auto_name": "<?php",
+							"incomplete_sync": null,
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4029.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "functions.php",
+					"settings":
+					{
+						"buffer_size": 5748,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5318,
+								5318
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110
+							],
+							"gjslint_options":
+							[
+							],
+							"incomplete_sync": null,
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"remote_loading": false,
+							"sublimelinter": true,
+							"sublimelinter_delay": 0.5,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": true,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1061.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 36.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 193.0
+	},
+	"output.sftp":
+	{
+		"height": 164.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 315.0,
+	"status_bar_visible": true
+}

@@ -1,4 +1,5 @@
 <?php
+
 /*
 ====================================================================
 Original EULA
@@ -72,6 +73,8 @@ http://www.nusphere.com
  */
 
 namespace NuSOAP;
+
+date_default_timezone_set(@date_default_timezone_get());
 
 class Base
 {

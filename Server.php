@@ -939,8 +939,7 @@ class Server extends Base
             $payload .= $this->getDebugAsXMLComment();
         }
         $this->outgoingHeaders[] = "Server: $this->title Server v$this->version";
-        preg_match('/\$Revisio' . 'n: ([^ ]+)/', $this->revision, $rev);
-        $this->outgoingHeaders[] = "X-SOAP-Server: $this->title/$this->version (".$rev[1].")";
+        $this->outgoingHeaders[] = "X-SOAP-Server: $this->title/$this->version";
         // Let the Web server decide about this
         //$this->outgoingHeaders[] = "Connection: Close\r\n";
         $payload = $this->_getHTTPBody($payload);

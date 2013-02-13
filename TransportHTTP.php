@@ -274,8 +274,7 @@ class TransportHTTP extends Base
             $this->chOptions = $curl_options;
         }
         $this->useCurl = $useCurl;
-        preg_match('/\$Revisio' . 'n: ([^ ]+)/', $this->revision, $rev);
-        $this->_setHeader('User-Agent', $this->title.'/'.$this->version.' ('.$rev[1].')');
+        $this->_setHeader('User-Agent', $this->title.'/'.$this->version);
     }
 
     /**

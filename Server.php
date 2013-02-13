@@ -1095,7 +1095,7 @@ class Server extends Base
             // get SOAP headers
             $this->requestHeaders = $parser->getHeaders();
             // get SOAP Header
-            $this->requestHeader = $parser->get_soapheader();
+            $this->requestHeader = $parser->getSoapHeader();
             // add document for doclit support
             $this->document = $parser->document;
         }

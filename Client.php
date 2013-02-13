@@ -862,7 +862,7 @@ class Client extends Base
             // get SOAP headers
             $this->responseHeaders = $parser->getHeaders();
             // get SOAP headers
-            $this->responseHeader = $parser->get_soapheader();
+            $this->responseHeader = $parser->getSoapHeader();
             // get decoded message
             $return = $parser->get_soapbody();
             // add document for doclit support

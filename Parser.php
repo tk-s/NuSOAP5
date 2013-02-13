@@ -272,8 +272,8 @@ class Parser extends Base
             // Set the object for the parser.
             xml_set_object($this->parser, $this);
             // Set the element handlers for the parser.
-            xml_set_element_handler($this->parser, 'start_element','end_element');
-            xml_set_character_data_handler($this->parser,'character_data');
+            xml_set_element_handler($this->parser, 'startElement','endElement');
+            xml_set_characterData_handler($this->parser,'characterData');
 
             // Parse the XML file.
             if (!xml_parse($this->parser,$xml,true))
@@ -385,7 +385,7 @@ class Parser extends Base
             $this->bodyPosition = $pos;
         // set method
         }
-        else if ($this->status == 'body' && $pos == ($this->bodyPosition+1))
+        else if ($this->status == 'body' && $pos == ($this->bodyPosition + 1))
         {
             $this->status = 'method';
             $this->rootStructName = $name;

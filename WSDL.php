@@ -508,7 +508,7 @@ class WSDL extends Base
         {
             $this->_debug('getting WSDL http(s) URL ' . $wsdl);
             // get wsdl
-            $tr = new soap_transport_http($wsdl, $this->curlOptions, $this->useCurl);
+            $tr = new TransportHTTP($wsdl, $this->curlOptions, $this->useCurl);
             $tr->request_method = 'GET';
             $tr->useSOAPAction = false;
             if ($this->proxyHost && $this->proxyPort)

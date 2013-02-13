@@ -723,7 +723,7 @@ class Client extends Base
                 }
                 else
                 {
-                    $http = new soap_transport_http($this->endPoint, $this->curlOptions, $this->useCurl);
+                    $http = new TransportHTTP($this->endPoint, $this->curlOptions, $this->useCurl);
                     if ($this->persistentConnection)
                     {
                         $http->usePersistentConnection();

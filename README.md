@@ -19,10 +19,12 @@ The "__autoload.php" file must be included / required before any action can be t
 
 **Client**
 
-$client = new NuSOAP\Client("url-to-wsdl");
-$client->setCredentials("username", "password", "authtype");
+    require_once "__autoload.php";
+    
+    $client = new NuSOAP\Client("url-to-wsdl");
+    $client->setCredentials("username", "password", "authtype");
 
-$result = $client->call("FunctionName", $params);
+    $result = $client->call("FunctionName", $params);
 
 
 Initial Goals

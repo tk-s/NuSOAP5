@@ -290,9 +290,9 @@ class XMLSchema extends Base
     *
     * @param    string $xml path or URL
     * @param    string $type (schema|xml)
-    * @access   protected
+    * @access   public
     */
-    function parseString($xml,$type)
+    public function parseString($xml,$type)
     {
         // parse xml string
         if ($xml != "")
@@ -308,7 +308,7 @@ class XMLSchema extends Base
             // Set the element handlers for the parser.
             if ($type == "schema")
             {
-                xml_set_element_handler($this->parser, '_schemaStartElement','_schemaEndElement');
+                xml_set_element_handler($this->parser, 'schemaStartElement','_schemaEndElement');
                 xml_set_character_data_handler($this->parser,'_schemaCharacterData');
             }
             else if ($type == "xml")
@@ -362,9 +362,9 @@ class XMLSchema extends Base
     * @param    string $parser XML parser object
     * @param    string $name element name
     * @param    string $attrs associative array of attributes
-    * @access   protected
+    * @access   public
     */
-    protected function _schemaStartElement($parser, $name, $attrs)
+    public function schemaStartElement($parser, $name, $attrs)
     {
         // position in the total number of elements, starting from 0
         $pos = $this->position++;

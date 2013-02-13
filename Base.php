@@ -329,7 +329,7 @@ class Base
     */
     protected function expandEntities($val)
     {
-        if (static::$_charEncoding)
+        if (static::$charEncoding)
         {
             return htmlspecialchars($val);
         }
@@ -344,9 +344,9 @@ class Base
     */
     public function getError()
     {
-        if (static::$_errorString !== '')
+        if (static::$errorString !== '')
         {
-            return static::$_errorString;
+            return static::$errorString;
         }
         return false;
     }
@@ -359,7 +359,7 @@ class Base
     */
     protected function setError($str = "")
     {
-        static::$_errorString = $str;
+        static::$errorString = $str;
     }
 
     /**

@@ -931,7 +931,7 @@ class XMLSchema extends Base
                         }
                         else if ($a == 'http://schemas.xmlsoap.org/wsdl/:arrayType')
                         {
-                            $this->usedNamespaces['wsdl'] = $this->namespaces['wsdl'];
+                            static::$usedNamespaces['wsdl'] = $this->namespaces['wsdl'];
                             $contentStr .= ' wsdl:arrayType="'.$this->contractQName($v).'"';
                         }
                         else
@@ -1007,7 +1007,7 @@ class XMLSchema extends Base
             }
         }
         $el = "<$schemaPrefix:schema$attr targetNamespace=\"$this->schemaTargetNamespace\"\n";
-        foreach (array_diff($this->usedNamespaces, $this->enclosingNamespaces) as $nsp => $ns)
+        foreach (array_diff(static::$usedNamespaces, $this->enclosingNamespaces) as $nsp => $ns)
         {
             $el .= " xmlns:$nsp=\"$ns\"";
         }

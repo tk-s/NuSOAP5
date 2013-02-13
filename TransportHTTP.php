@@ -298,7 +298,7 @@ class TransportHTTP extends Base
     * @param string $value The value of the header
     * @access protected
     */
-    function _setHeader($name, $value)
+    protected function setHeader($name, $value)
     {
         $this->outgoingHeaders[$name] = $value;
         $this->debug("set header $name: $value");

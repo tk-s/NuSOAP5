@@ -51,6 +51,8 @@ I intend only to modernize the library, without overly modifying functionality.
  - The code was inconsistent in style, so I have tried to implement the Allman style (http://en.wikipedia.org/wiki/Indent_style#Allman_style)
  - Class constructors are now __construct() rather than classname
  - Unified method and variable naming within classes, removing underscores
+ - No longer relies on $GLOBALS for anything
+ - Relies on $_SERVER in favor of $HTTP_SERVER_VARS
 
 
 **Keep in mind**

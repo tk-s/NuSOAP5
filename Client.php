@@ -665,7 +665,7 @@ class Client extends Base
     public function loadWSDL()
     {
         $this->debug('instantiating wsdl class with doc: '.$this->wsdlFile);
-        $this->wsdl = new wsdl('',$this->proxyHost,$this->proxyPort,$this->proxyUsername,$this->proxyPassword,$this->timeout,$this->responseTimeout,$this->curlOptions,$this->useCurl);
+        $this->wsdl = new WSDL('',$this->proxyHost,$this->proxyPort,$this->proxyUsername,$this->proxyPassword,$this->timeout,$this->responseTimeout,$this->curlOptions,$this->useCurl);
         $this->wsdl->setCredentials($this->username, $this->password, $this->authtype, $this->certRequest);
         $this->wsdl->fetchWSDL($this->wsdlFile);
         $this->checkWSDL();

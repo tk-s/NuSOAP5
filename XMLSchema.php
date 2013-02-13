@@ -309,12 +309,12 @@ class XMLSchema extends Base
             if ($type == "schema")
             {
                 xml_set_element_handler($this->parser, 'schemaStartElement','schemaEndElement');
-                xml_set_characterData_handler($this->parser,'_schemaCharacterData');
+                xml_set_character_data_handler($this->parser,'_schemaCharacterData');
             }
             else if ($type == "xml")
             {
                 xml_set_element_handler($this->parser, 'xmlStartElement','xmlEndElement');
-                xml_set_characterData_handler($this->parser,'xmlCharacterData');
+                xml_set_character_data_handler($this->parser,'xmlCharacterData');
             }
 
             // Parse the XML file.

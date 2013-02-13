@@ -273,7 +273,7 @@ class Parser extends Base
             xml_set_object($this->parser, $this);
             // Set the element handlers for the parser.
             xml_set_element_handler($this->parser, 'startElement','endElement');
-            xml_set_characterData_handler($this->parser,'characterData');
+            xml_set_character_data_handler($this->parser,'characterData');
 
             // Parse the XML file.
             if (!xml_parse($this->parser,$xml,true))

@@ -1093,7 +1093,7 @@ class TransportHTTP extends Base
             $curl_headers = array();
             foreach ($this->outgoingHeaders as $k => $v)
             {
-                switch($k)
+                switch ($k)
                 {
                     case "Connection" :
                     case "Content-Length" :

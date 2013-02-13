@@ -631,7 +631,7 @@ class WSDL extends Base
             $this->_debug('Parsing WSDL schema');
             // $this->_debug("startElement for $name ($attrs[name]). status = $this->status (".$this->getLocalPart($name).")");
             $this->status = 'schema';
-            $this->currentSchema = new nusoap_xmlschema('', '', $this->namespaces);
+            $this->currentSchema = new XMLSchema('', '', $this->namespaces);
             $this->currentSchema->schemaStartElement($parser, $name, $attrs);
             $this->appendDebug($this->currentSchema->getDebug());
             $this->currentSchema->clearDebug();
@@ -1109,7 +1109,7 @@ class WSDL extends Base
     * @param string $ns namespace (not prefix) of the type
     * @return mixed
     * @access public
-    * @see nusoap_xmlschema
+    * @see XMLSchema
     */
     public function getTypeDef($type, $ns)
     {
@@ -2527,7 +2527,7 @@ class WSDL extends Base
     * @param array $elements e.g. array ( name => array(name=>'',type=>'') )
     * @param array $attrs e.g. array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'xsd:string[]'))
     * @param string $arrayType as namespace:name (xsd:string)
-    * @see nusoap_xmlschema
+    * @see XMLSchema
     * @access public
     */
     public function addComplexType(
@@ -2589,7 +2589,7 @@ class WSDL extends Base
     * @param string $typeClass (should always be simpleType)
     * @param string $phpType (should always be scalar)
     * @param array $enumeration array of values
-    * @see nusoap_xmlschema
+    * @see XMLSchema
     * @access public
     */
     public function addSimpleType($name, $restrictionBase='', $typeClass='simpleType', $phpType='scalar', $enumeration=array())
@@ -2604,7 +2604,7 @@ class WSDL extends Base
     * adds an element to the WSDL types
     *
     * @param array $attrs attributes that must include name and type
-    * @see nusoap_xmlschema
+    * @see XMLSchema
     * @access public
     */
     public function addElement($attrs)

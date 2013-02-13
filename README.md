@@ -28,6 +28,7 @@ I intend only to modernize the library, without overly modifying functionality.
  - The code was inconsistent in style, so I have tried to implement the Allman style (http://en.wikipedia.org/wiki/Indent_style#Allman_style)
  - Class constructors are now __construct() rather than classname
  - Unified method and variable naming within classes, removing underscores
+ - All class vars and methods listed as @private are now defined as protected
 
 
 **Keep in mind**

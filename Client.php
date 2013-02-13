@@ -711,7 +711,7 @@ class Client extends Base
     {
         $this->_checkCookies();
         // detect transport
-        switch(true)
+        switch (true)
         {
             // http(s)
             case preg_match('/^http/',$this->endPoint) :

@@ -515,7 +515,7 @@ class Base
         }
         // detect type and serialize
         $xml = '';
-        switch(true)
+        switch (true)
         {
             case (is_bool($val) || $type === 'boolean') :
                 $this->_debug("serializeVal: serialize boolean");

@@ -1090,8 +1090,8 @@ class Server extends Base
             $this->methodURI = $parser->root_struct_namespace;
             $this->methodName = $parser->root_struct_name;
             $this->debug('methodname: '.$this->methodName.' methodURI: '.$this->methodURI);
-            $this->debug('calling parser->get_soapbody()');
-            $this->methodParams = $parser->get_soapbody();
+            $this->debug('calling parser->getSoapBody()');
+            $this->methodParams = $parser->getSoapBody();
             // get SOAP headers
             $this->requestHeaders = $parser->getHeaders();
             // get SOAP Header

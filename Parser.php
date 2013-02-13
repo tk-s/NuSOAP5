@@ -177,6 +177,7 @@ class Parser extends Base
      * incoming SOAP headers (text)
      * @var string
      */
+    public $responseHeaders = null;
     
     /**
      * [$bodyPosition description]

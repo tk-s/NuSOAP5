@@ -249,7 +249,7 @@ class Client extends Base
      * toggles whether the parser decodes element content with utf8_decode()
      * @var boolean
      */
-    public $decode_utf8 = true;
+    public $decodeUTF8 = true;
     
     /**
      * WSDL operations, empty for WSDL initialization error
@@ -864,7 +864,7 @@ class Client extends Base
             // get SOAP headers
             $this->responseHeader = $parser->getSoapHeader();
             // get decoded message
-            $return = $parser->get_soapbody();
+            $return = $parser->getSoapBody();
             // add document for doclit support
             $this->document = $parser->document;
             // destroy the parser object

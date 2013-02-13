@@ -91,14 +91,14 @@ class Server extends Base
      * @var array
      * @access protected
      */
-    protected $_headers = array();
+    protected $headers = array();
 
     /**
      * HTTP request
      * @var string
      * @access protected
      */
-    protected $_request = '';
+    protected $request = '';
 
     /**
      * SOAP headers from request (incomplete namespace resolution; special characters not escaped) (text)
@@ -140,21 +140,21 @@ class Server extends Base
      * @var string
      * @access protected
      */
-    protected $_methodName = '';
+    protected $methodName = '';
     
     /**
      * method parameters from request
      * @var array
      * @access protected
      */
-    protected $_methodParams = array();
+    protected $methodParams = array();
     
     /**
      * SOAP Action from request
      * @var string
      * @access protected
      */
-    protected $_SOAPAction = '';
+    protected $SOAPAction = '';
     
     /**
      * character set encoding of incoming (request) messages
@@ -182,7 +182,7 @@ class Server extends Base
      * @var string
      * @access protected
      */
-    protected $_response = '';
+    protected $response = '';
 
     /**
      * SOAP headers for response (text or array of Val or associative array)
@@ -196,14 +196,14 @@ class Server extends Base
      * @var string
      * @access protected
      */
-    protected $_responseSOAP = '';
+    protected $responseSOAP = '';
     
     /**
      * method return value to place in response
      * @var mixed
      * @access protected
      */
-    protected $_methodReturn = false;
+    protected $methodReturn = false;
 
     /**
      * whether $methodreturn is a string of literal XML
@@ -217,14 +217,14 @@ class Server extends Base
      * @var mixed
      * @access protected
      */
-    protected $_fault = false;
+    protected $fault = false;
 
     /**
      * text indication of result (for debugging)
      * @var string
      * @access protected
      */
-    protected $_result = 'successful';
+    protected $result = 'successful';
 
     /**
      * assoc array of operations => opData; operations are added by the register()
@@ -232,14 +232,14 @@ class Server extends Base
      * @var array
      * @access protected
      */
-    protected $_operations = array();
+    protected $operations = array();
 
     /**
      * wsdl instance (if one)
      * @var mixed
      * @access protected
      */
-    protected $_wsdl = false;
+    protected $wsdl = false;
 
     /**
      * URL for WSDL (if one)
@@ -431,7 +431,7 @@ class Server extends Base
     *
     * @access protected
     */
-    protected function _parseHTTPHeaders()
+    protected function parseHTTPHeaders()
     {
         $this->_request = '';
         $this->_SOAPAction = '';
@@ -550,7 +550,7 @@ class Server extends Base
     * @param    string $data XML string
     * @access   protected
     */
-    protected function __parseRequest($data = '')
+    protected function _parseRequest($data = '')
     {
         $this->_debug('entering __parseRequest()');
         $this->_parseHTTPHeaders();
@@ -610,7 +610,7 @@ class Server extends Base
     *
     * @access protected
     */
-    protected function _invokeMethod() {
+    protected function invokeMethod() {
         $this->_debug('in _invokeMethod, methodname=' . $this->_methodName . ' methodURI=' . $this->_methodURI . ' SOAPAction=' . $this->_SOAPAction);
 
         //
@@ -773,7 +773,7 @@ class Server extends Base
     *
     * @access protected
     */
-    protected function _serializeReturn()
+    protected function serializeReturn()
     {
         $this->_debug('Entering _serializeReturn methodname: ' . $this->_methodName . ' methodURI: ' . $this->_methodURI);
         // if fault
@@ -914,7 +914,7 @@ class Server extends Base
     *
     * @access   protected
     */
-    protected function _sendResponse()
+    protected function sendResponse()
     {
         $this->_debug('Enter _sendResponse');
         
@@ -1013,7 +1013,7 @@ class Server extends Base
     * @return   boolean Whether the operation was found
     * @access   protected
     */
-    protected function _verifyMethod($operation, $request)
+    protected function verifyMethod($operation, $request)
     {
         if (isset($this->wsdl) && is_object($this->wsdl))
         {
@@ -1037,7 +1037,7 @@ class Server extends Base
     * @return   mixed   value of the message, decoded into a PHP type
     * @access   protected
     */
-    protected function _parseRequest($headers, $data)
+    protected function parseRequest($headers, $data)
     {
         $this->_debug('Entering _parseRequest() for data of length ' . strlen($data) . ' headers:');
         $this->appendDebug($this->varDump($headers));
@@ -1108,7 +1108,7 @@ class Server extends Base
     * @return string The HTTP body, which includes the SOAP payload
     * @access protected
     */
-    protected function _getHTTPBody($soapmsg)
+    protected function getHTTPBody($soapmsg)
     {
         return $soapmsg;
     }
@@ -1121,7 +1121,7 @@ class Server extends Base
     * @return string the HTTP content type for the current response.
     * @access protected
     */
-    protected function _getHTTPContentType()
+    protected function getHTTPContentType()
     {
         return 'text/xml';
     }
@@ -1135,7 +1135,7 @@ class Server extends Base
     * @return string the HTTP content type charset for the current response.
     * @access protected
     */
-    protected function _getHTTPContentTypeCharset()
+    protected function getHTTPContentTypeCharset()
     {
         return $this->soapDefEncoding;
     }

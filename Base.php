@@ -100,7 +100,7 @@ class Base
      * @var string
      * @access protected
      */
-    protected static $_errorString = '';
+    protected static $errorString = '';
     
     /**
      * Current debug string (manipulated by debug/appendDebug/clearDebug/getDebug/getDebugAsXMLComment)
@@ -108,7 +108,7 @@ class Base
      * @var string
      * @access protected
      */
-    protected static $_debugString = '';
+    protected static $debugString = '';
     
     /**
      * toggles automatic encoding of special characters as entities
@@ -117,7 +117,7 @@ class Base
      * @var boolean
      * @access protected
      */
-    protected static $_charEncoding = true;
+    protected static $charEncoding = true;
     
     /**
      * the debug level for this instance
@@ -125,13 +125,13 @@ class Base
      * @var integer
      * @access protected
      */
-    protected static $_debugLevel;
+    protected static $debugLevel;
 
     /**
      * Global debug state
      * @var boolean
      */
-    protected static $_debug = false;
+    protected static $debug = false;
 
     /**
     * set schema version
@@ -171,7 +171,7 @@ class Base
     * @var      array
     * @access   protected
     */
-    protected static $_usedNamespaces = array();
+    protected static $usedNamespaces = array();
 
     /**
     * XML Schema types in an array of uri => (array of xml type => php type)
@@ -261,7 +261,7 @@ class Base
     * @param    string $string debug data
     * @access   protected
     */
-    protected function _debug($string)
+    protected function debug($string)
     {
         if (static::$_debugLevel > 0)
         {
@@ -327,7 +327,7 @@ class Base
     * @param    string  $val    The string in which to expand entities.
     * @access   protected
     */
-    protected function _expandEntities($val)
+    protected function expandEntities($val)
     {
         if (static::$_charEncoding)
         {
@@ -357,7 +357,7 @@ class Base
     * @return   boolean $string error string
     * @access   protected
     */
-    protected function _setError($str = "")
+    protected function setError($str = "")
     {
         static::$_errorString = $str;
     }
@@ -369,7 +369,7 @@ class Base
     * @return   string  (arraySimple|arrayStruct)
     * @access   protected
     */
-    protected function _isArraySimpleOrStruct(Array $val)
+    protected function isArraySimpleOrStruct(Array $val)
     {
         $keyList = array_keys($val);
         foreach ($keyList as $keyListValue)
@@ -863,7 +863,7 @@ class Base
     * @return   string contracted qname
     * @access   protected
     */
-    protected function _contractQname($qname)
+    protected function contractQname($qname)
     {
         // get element namespace
         //$this->xdebug("Contract $qname");

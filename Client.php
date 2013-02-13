@@ -418,7 +418,7 @@ class Client extends Base
             }
             if (! $this->forceEndpoint)
             {
-                $this->endPoint = $opData['endPoint'];
+                $this->endPoint = $opData['endpoint'];
             }
             else
             {
@@ -617,7 +617,7 @@ class Client extends Base
     *
     * @access   protected
     */
-    protected function _checkWSDL()
+    protected function checkWSDL()
     {
         $this->appendDebug($this->wsdl->getDebug());
         $this->wsdl->clearDebug();
@@ -707,7 +707,7 @@ class Client extends Base
     * @return   mixed native PHP types.
     * @access   protected
     */
-    protected function _send($msg, $soapaction = '', $timeout = 0, $responseTimeout = 30)
+    protected function send($msg, $soapaction = '', $timeout = 0, $responseTimeout = 30)
     {
         $this->_checkCookies();
         // detect transport
@@ -806,7 +806,7 @@ class Client extends Base
     * @return   mixed   value of the message, decoded into a PHP type
     * @access   protected
     */
-    protected function _parseResponse($headers, $data)
+    protected function parseResponse($headers, $data)
     {
         $this->_debug('Entering _parseResponse() for data of length ' . strlen($data) . ' headers:');
         $this->appendDebug($this->varDump($headers));
@@ -1061,7 +1061,7 @@ class Client extends Base
     * @return   string PHP/NuSOAP code for the proxy class
     * @access   protected
     */
-    protected function _getProxyClassCode($r)
+    protected function getProxyClassCode($r)
     {
         $this->_debug("in getProxy endPointType=$this->endPointType");
         $this->appendDebug("wsdl=" . $this->varDump($this->wsdl));
@@ -1143,7 +1143,7 @@ class Client extends Base
     * @return string The HTTP body, which includes the SOAP payload
     * @access protected
     */
-    protected function _getHTTPBody($soapmsg)
+    protected function getHTTPBody($soapmsg)
     {
         return $soapmsg;
     }
@@ -1156,7 +1156,7 @@ class Client extends Base
     * @return string the HTTP content type for the current request.
     * @access protected
     */
-    protected function _getHTTPContentType()
+    protected function getHTTPContentType()
     {
         return 'text/xml';
     }
@@ -1170,7 +1170,7 @@ class Client extends Base
     * @return string the HTTP content type charset for the current request.
     * @access protected
     */
-    protected function _getHTTPContentTypeCharset()
+    protected function getHTTPContentTypeCharset()
     {
         return $this->soapDefEncoding;
     }
@@ -1222,7 +1222,7 @@ class Client extends Base
      * @return   boolean always return true
      * @access   private
      */
-    protected function _checkCookies()
+    protected function checkCookies()
     {
         if (sizeof($this->cookies) == 0) {
             return true;
@@ -1265,7 +1265,7 @@ class Client extends Base
      * @return  boolean always return true
      * @access  protected
      */
-    protected function _updateCookies($cookies)
+    protected function updateCookies($cookies)
     {
         if (sizeof($this->cookies) == 0)
         {

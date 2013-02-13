@@ -346,7 +346,7 @@ class XMLSchema extends Base
      * @return  string  A type name for an unnamed type
      * @access  protected
      */
-    protected function _createTypeName($ename)
+    protected function createTypeName($ename)
     {
         $scope = '';
         for ($i = 0; $i < count($this->complexTypeStack); $i++)
@@ -851,7 +851,7 @@ class XMLSchema extends Base
     * @param    string $data element content
     * @access   protected
     */
-    protected function _schemaCharacterData($parser, $data)
+    protected function schemaCharacterData($parser, $data)
     {
         $pos = $this->depth_array[$this->depth - 1];
         $this->message[$pos]['cdata'] .= $data;
@@ -1021,7 +1021,7 @@ class XMLSchema extends Base
     * @param    string $string debug data
     * @access   protected
     */
-    protected function _xdebug($string)
+    protected function xdebug($string)
     {
         $this->_debug('<' . $this->schemaTargetNamespace . '> '.$string);
     }

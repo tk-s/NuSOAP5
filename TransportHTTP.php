@@ -284,7 +284,7 @@ class TransportHTTP extends Base
     * @param    mixed $value The cURL option value
     * @access   protected
     */
-    protected function _setCurlOption($option, $value)
+    protected function setCurlOption($option, $value)
     {
         $this->_debug("setCurlOption option=$option, value=");
         $this->appendDebug($this->varDump($value));
@@ -310,7 +310,7 @@ class TransportHTTP extends Base
     * @param string $name The name of the header
     * @access protected
     */
-    protected function _unsetHeader($name)
+    protected function unsetHeader($name)
     {
         if (isset($this->outgoingHeaders[$name]))
         {
@@ -325,7 +325,7 @@ class TransportHTTP extends Base
     * @param string $url The URL to which to connect
     * @access protected
     */
-    protected function _setURL($url)
+    protected function setURL($url)
     {
         $this->url = $url;
 
@@ -380,7 +380,7 @@ class TransportHTTP extends Base
     * @return   string  I/O method to use (socket|curl|unknown)
     * @access   protected
     */
-    protected function _IOMethod()
+    protected function IOMethod()
     {
         if ($this->useCurl ||
             $this->scheme == 'https' ||
@@ -409,7 +409,7 @@ class TransportHTTP extends Base
     * @return   boolean true if connected, false if not
     * @access   protected
     */
-    protected function _connect($connection_timeout = 0, $response_timeout = 30)
+    protected function connect($connection_timeout = 0, $response_timeout = 30)
     {
         $this->_debug("connect connection_timeout $connection_timeout, response_timeout $response_timeout, scheme $this->scheme, host $this->host, port $this->port");
       
@@ -916,7 +916,7 @@ class TransportHTTP extends Base
      * @return boolean Whether a skippable header was found.
      * @access  protected
      */
-    protected function _isSkippableCurlHeader(&$data)
+    protected function isSkippableCurlHeader(&$data)
     {
         $skipHeaders = array(   'HTTP/1.1 100',
                                 'HTTP/1.0 301',
@@ -1007,7 +1007,7 @@ class TransportHTTP extends Base
      * @return  void
      * @access  protected
      */
-    protected function _buildPayload($data, $cookie_str = '')
+    protected function buildPayload($data, $cookie_str = '')
     {
         // Note: for cURL connections, $this->outgoingPayload is ignored,
         // as is the Content-Length header, but these are still created as
@@ -1063,7 +1063,7 @@ class TransportHTTP extends Base
     * @return   boolean true if OK, false if problem
     * @access   protected
     */
-    protected function _sendRequest($data, $cookies = NULL)
+    protected function sendRequest($data, $cookies = NULL)
     {
         // build cookie string
         $cookie_str = $this->_getCookiesForRequest($cookies, (($this->scheme == 'ssl') || ($this->scheme == 'https')));
@@ -1140,7 +1140,7 @@ class TransportHTTP extends Base
     * @return   string the response (also sets member variables like incomingPayload)
     * @access   protected
     */
-    protected function _getResponse()
+    protected function getResponse()
     {
         $this->incomingPayload = '';
         
@@ -1722,7 +1722,7 @@ class TransportHTTP extends Base
      * @return  string for Cookie-HTTP-Header
      * @access  protected
      */
-    protected function _getCookiesForRequest($cookies, $secure = false)
+    protected function getCookiesForRequest($cookies, $secure = false)
     {
         $cookie_str = '';
         if ($cookies !== null && is_array($cookies))

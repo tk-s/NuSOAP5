@@ -207,7 +207,7 @@ class Parser extends Base
      * instance of xml_parser
      * @var [type]
      */
-    protected $_parser = null;
+    protected $parser = null;
 
     /**
     * constructor that actually does the parsing
@@ -334,7 +334,7 @@ class Parser extends Base
     * @param    array $attrs associative array of attributes
     * @access   private
     */
-    protected function _startElement($parser, $name, Array $attrs)
+    protected function startElement($parser, $name, Array $attrs)
     {
         // position in a total number of elements, starting from 0
         // update class level pos
@@ -537,7 +537,7 @@ class Parser extends Base
     * @param    string $name element name
     * @access   protected
     */
-    protected function _endElement($parser, $name)
+    protected function endElement($parser, $name)
     {
         // position of current element is equal to the last value left in depthArray for my depth
         $pos = $this->depthArray[$this->depth--];
@@ -684,7 +684,7 @@ class Parser extends Base
     * @param    string $data element content
     * @access   protected
     */
-    protected function _characterData($parser, $data)
+    protected function characterData($parser, $data)
     {
         $pos = $this->depthArray[$this->depth];
         if ($this->xmlEncoding=='UTF-8')
@@ -751,7 +751,7 @@ class Parser extends Base
     * @return   mixed PHP value
     * @access   protected
     */
-    protected function _decodeSimple($value, $type, $typens)
+    protected function decodeSimple($value, $type, $typens)
     {
         // TODO: use the namespace!
         if ((!isset($type)) || $type == 'string' || $type == 'long' || $type == 'unsignedLong')
@@ -809,7 +809,7 @@ class Parser extends Base
     * @return   mixed   PHP value
     * @access   protected
     */
-    protected function _buildVal($pos)
+    protected function buildVal($pos)
     {
         if (!isset($this->message[$pos]['type']))
         {

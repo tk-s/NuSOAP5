@@ -490,7 +490,7 @@ class WSDL extends Base
      * @param string $wsdl path or URL
      * @access protected 
      */
-    protected function _parseWSDL($wsdl = '')
+    protected function parseWSDL($wsdl = '')
     {
         $this->_debug("parse WSDL at path=$wsdl");
 
@@ -618,7 +618,7 @@ class WSDL extends Base
      * @param string $attrs associative array of attributes
      * @access protected 
      */
-    protected function _startElement($parser, $name, $attrs)
+    protected function startElement($parser, $name, $attrs)
     {
         if ($this->status == 'schema')
         {
@@ -883,7 +883,7 @@ class WSDL extends Base
     * @param string $name element name
     * @access protected 
     */
-    protected function _endElement($parser, $name)
+    protected function endElement($parser, $name)
     {
         // unset schema status
         if (/*preg_match('/types$/', $name) ||*/ preg_match('/schema$/', $name))
@@ -919,7 +919,7 @@ class WSDL extends Base
      * @param string $data element content
      * @access protected 
      */
-    protected function _characterData($parser, $data)
+    protected function characterData($parser, $data)
     {
         $pos = isset($this->depthArray[$this->depth]) ? $this->depthArray[$this->depth] : 0;
         if (isset($this->message[$pos]['cdata']))
@@ -1188,7 +1188,7 @@ class WSDL extends Base
     *
     * @access private
     */
-    protected function _webDescription()
+    protected function webDescription()
     {
         $PHP_SELF = $_SERVER['PHP_SELF'];
         
@@ -1514,7 +1514,7 @@ class WSDL extends Base
      * @return boolean whether they parameters are unwrapped (and should be wrapped)
      * @access protected
      */
-    protected function _parametersMatchWrapped($type, &$parameters)
+    protected function parametersMatchWrapped($type, &$parameters)
     {
         $this->_debug("in _parametersMatchWrapped type=$type, parameters=");
         $this->appendDebug($this->varDump($parameters));
@@ -1836,7 +1836,7 @@ class WSDL extends Base
      * @return string value serialized as an XML string
      * @access protected
      */
-    protected function _serializeType(
+    protected function serializeType(
         $name,
         $type,
         $value,
@@ -2295,7 +2295,7 @@ class WSDL extends Base
      * @return string value serialized as an XML string
      * @access protected
      */
-    protected function _serializeComplexTypeAttributes($typeDef, $value, $ns, $uqType)
+    protected function serializeComplexTypeAttributes($typeDef, $value, $ns, $uqType)
     {
         $this->_debug("_serializeComplexTypeAttributes for XML Schema type $ns:$uqType");
         $xml = '';
@@ -2382,7 +2382,7 @@ class WSDL extends Base
      * @return string value serialized as an XML string
      * @access private
      */
-    protected function _serializeComplexTypeElements($typeDef, $value, $ns, $uqType, $use='encoded', $encodingStyle=false)
+    protected function serializeComplexTypeElements($typeDef, $value, $ns, $uqType, $use='encoded', $encodingStyle=false)
     {
         $this->_debug("in _serializeComplexTypeElements for XML Schema type $ns:$uqType");
         $xml = '';

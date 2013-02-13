@@ -96,19 +96,19 @@ class WSDLCache
      *  @var resource
      *  @access protected
      */
-    protected $_fplock;
+    protected $fplock;
     
     /**
      *  @var integer
      *  @access protected
      */
-    protected $_cacheLifetime;
+    protected $cacheLifetime;
     
     /**
      *  @var string
      *  @access protected
      */
-    protected $_cacheDir;
+    protected $cacheDir;
     
     /**
      *  @var string
@@ -137,7 +137,7 @@ class WSDLCache
     * @return string The filename used to cache the instance
     * @access protected
     */
-    protected function _createFilename($wsdl)
+    protected function createFilename($wsdl)
     {
         return $this->_cacheDir.'/wsdlcache-' . md5($wsdl);
     }
@@ -148,7 +148,7 @@ class WSDLCache
     * @param    string $string debug data
     * @access   protected
     */
-    protected function _debug($string)
+    protected function debug($string)
     {
         $this->debugString .= get_class($this).": $string\n";
     }
@@ -213,7 +213,7 @@ class WSDLCache
     * @return boolean Lock successfully obtained ?!
     * @access protected
     */
-    protected function _obtainMutex($filename, $mode)
+    protected function obtainMutex($filename, $mode)
     {
         if (isset($this->_fplock[md5($filename)]))
         {

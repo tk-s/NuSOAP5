@@ -90,20 +90,20 @@ class Client extends \NuSOAP\Client
      * data, filename, contenttype, cid
      * @access protected
      */
-    protected $_requestAttachments = array();
+    protected $requestAttachments = array();
     
     /**
      * @var array Each array element in the return is an associative array with keys
      * data, filename, contenttype, cid
      * @access protected
      */
-    protected $_responseAttachments;
+    protected $responseAttachments;
     
     /**
      * @var string
      * @access protected
      */
-    protected $_mimeContentType;
+    protected $mimeContentType;
     
     /**
     * adds a MIME attachment to the current request.
@@ -173,7 +173,7 @@ class Client extends \NuSOAP\Client
     * @return string The HTTP body, which includes the SOAP payload
     * @access protected
     */
-    protected function _getHTTPBody($soapmsg)
+    protected function getHTTPBody($soapmsg)
     {
         if (count($this->_requestAttachments) > 0)
         {
@@ -243,7 +243,7 @@ class Client extends \NuSOAP\Client
     * @return string the HTTP content type for the current request.
     * @access protected
     */
-    protected function _getHTTPContentType()
+    protected function getHTTPContentType()
     {
         if (count($this->_requestAttachments) > 0)
         {
@@ -261,7 +261,7 @@ class Client extends \NuSOAP\Client
     * @return string the HTTP content type charset for the current request.
     * @access protected
     */
-    protected function _getHTTPContentTypeCharset()
+    protected function getHTTPContentTypeCharset()
     {
         if (count($this->_requestAttachments) > 0)
         {
@@ -278,7 +278,7 @@ class Client extends \NuSOAP\Client
     * @return   mixed   value of the message, decoded into a PHP type
     * @access   protected
     */
-    protected function _parseResponse($headers, $data)
+    protected function parseResponse($headers, $data)
     {
         $this->_debug('Entering _parseResponse() for payload of length ' . strlen($data) . ' and type of ' . $headers['content-type']);
         $this->_responseAttachments = array();

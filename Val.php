@@ -94,7 +94,7 @@ class Val extends Base
      * @var string
      * @access protected
      */
-    protected $_name;
+    protected $name;
 
     /**
      * The XML type name (string or false)
@@ -102,7 +102,7 @@ class Val extends Base
      * @var mixed
      * @access protected
      */
-    protected $_type;
+    protected $type;
 
     /**
      * The PHP value
@@ -110,7 +110,7 @@ class Val extends Base
      * @var mixed
      * @access protected
      */
-    protected $_value;
+    protected $value;
 
     /**
      * The XML element namespace (string or false)
@@ -118,14 +118,14 @@ class Val extends Base
      * @var mixed
      * @access protected
      */
-    protected $_elementNS;
+    protected $elementNS;
     /**
      * The XML type namespace (string or false)
      *
      * @var mixed
      * @access protected
      */
-    protected $_typeNS;
+    protected $typeNS;
 
     /**
      * The XML element attributes (array or false)
@@ -133,7 +133,7 @@ class Val extends Base
      * @var mixed
      * @access protected
      */
-    protected $_attributes;
+    protected $attributes;
 
     /**
     * constructor

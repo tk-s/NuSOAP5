@@ -90,28 +90,28 @@ class Fault extends Base
      * @var string
      * @access protected
      */
-    protected $_faultCode = null;
+    protected $faultCode = null;
     
     /**
      * The fault actor
      * @var string
      * @access protected
      */
-    protected $_faultActor = null;
+    protected $faultActor = null;
     
     /**
      * The fault string, a description of the fault
      * @var string
      * @access protected
      */
-    protected $_faultString = null;
+    protected $faultString = null;
 
     /**
      * The fault detail, typically a string or array of string
      * @var mixed
      * @access protected
      */
-    protected $_faultDetail;
+    protected $faultDetail;
 
     /**
     * constructor

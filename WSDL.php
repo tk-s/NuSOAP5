@@ -524,8 +524,8 @@ class WSDL extends Base
             $tr->setEncoding('gzip, deflate');
             $wsdl_string = $tr->send('', $this->timeout, $this->responseTimeout);
             
-            //$this->debug("WSDL request\n" . $tr->outgoing_payload);
-            //$this->debug("WSDL response\n" . $tr->incoming_payload);
+            //$this->debug("WSDL request\n" . $tr->outgoingPayload);
+            //$this->debug("WSDL response\n" . $tr->incomingPayload);
             
             $this->appendDebug($tr->getDebug());
             // catch errors

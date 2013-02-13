@@ -762,10 +762,10 @@ class Client extends Base
                     $this->setError('no http/s in endPoint url');
                 }
                 
-                $this->request = $http->outgoing_payload;
-                $this->response = $http->incoming_payload;
+                $this->request = $http->outgoingPayload;
+                $this->response = $http->incomingPayload;
                 $this->appendDebug($http->getDebug());
-                $this->updateCookies($http->incoming_cookies);
+                $this->updateCookies($http->incomingCookies);
 
                 // save transport object if using persistent connections
                 if ($this->persistentConnection)
@@ -788,8 +788,8 @@ class Client extends Base
                 }
                 else
                 {
-                    $this->debug('got response, length='. strlen($this->responseData).' type='.$http->incoming_headers['content-type']);
-                    return $this->parseResponse($http->incoming_headers, $this->responseData);
+                    $this->debug('got response, length='. strlen($this->responseData).' type='.$http->incomingHeaders['content-type']);
+                    return $this->parseResponse($http->incomingHeaders, $this->responseData);
                 }
             break;
 

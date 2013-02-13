@@ -308,7 +308,7 @@ class XMLSchema extends Base
             // Set the element handlers for the parser.
             if ($type == "schema")
             {
-                xml_set_element_handler($this->parser, 'schemaStartElement','_schemaEndElement');
+                xml_set_element_handler($this->parser, 'schemaStartElement','schemaEndElement');
                 xml_set_character_data_handler($this->parser,'_schemaCharacterData');
             }
             else if ($type == "xml")
@@ -798,9 +798,9 @@ class XMLSchema extends Base
     *
     * @param    string $parser XML parser object
     * @param    string $name element name
-    * @access   protected
+    * @access   public
     */
-    protected function _schemaEndElement($parser, $name)
+    public function schemaEndElement($parser, $name)
     {
         // bring depth down a notch
         $this->depth--;

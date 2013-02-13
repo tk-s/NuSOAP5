@@ -230,7 +230,7 @@ class Base
         static::$debugLevel = $debugLevel;
 
         // Set debug state
-        static::$_debug = $debug;
+        static::$debug = $debug;
     }
 
     /**
@@ -279,7 +279,7 @@ class Base
     {
         if (static::$debugLevel > 0)
         {
-            static::$_debugString .= $string;
+            static::$debugString .= $string;
         }
     }
 
@@ -290,7 +290,7 @@ class Base
     */
     public function clearDebug()
     {
-        static::$_debugString = "";
+        static::$debugString = "";
     }
 
     /**
@@ -301,7 +301,7 @@ class Base
     */
     public function getDebug()
     {
-        return static::$_debugString;
+        return static::$debugString;
     }
 
     /**
@@ -313,11 +313,11 @@ class Base
     */
     public function getDebugAsXMLComment()
     {
-        while (strpos(static::$_debugString, '--'))
+        while (strpos(static::$debugString, '--'))
         {
-            static::$_debugString = str_replace('--', '- -', static::$_debugString);
+            static::$debugString = str_replace('--', '- -', static::$debugString);
         }
-        $ret = "<!--\n" . static::$_debugString . "\n-->";
+        $ret = "<!--\n" . static::$debugString . "\n-->";
         return $ret;
     }
 

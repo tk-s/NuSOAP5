@@ -269,10 +269,10 @@ class Server extends Base
 
         $this->appendDebug($this->varDump($_SERVER));    
 
-        if (static::$_debug)
+        if (static::$debug)
         {
             $this->debug("In nusoap_server, set debugFlag=$debug based on global flag");
-            $this->debugFlag = static::$_debug;
+            $this->debugFlag = static::$debug;
         }
         else if (isset($_SERVER['QUERY_STRING']))
         {

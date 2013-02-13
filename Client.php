@@ -317,7 +317,7 @@ class Client extends Base
         $this->portName = $portName;
 
         $this->_debug("ctor wsdl=$wsdl timeout=$timeout responseTimeout=$responseTimeout");
-        $this->appendDebug('endPoint=' . $this->publicDump($endPoint));
+        $this->appendDebug('endPoint=' . $this->varDump($endPoint));
 
         // make values
         if ($wsdl)
@@ -387,12 +387,12 @@ class Client extends Base
         $this->response = '';
         $this->responseData = '';
         $this->faultstring = '';
-        $this->faultcode = '';
+        $this->faultcode = ''; 
         $this->opData = array();
         
         $this->_debug("call: operation=$operation, namespace=$namespace, soapAction=$soapAction, rpcParams=$rpcParams, style=$style, use=$use, endPointType=$this->endPointType");
-        $this->appendDebug('params=' . $this->publicDump($params));
-        $this->appendDebug('headers=' . $this->publicDump($headers));
+        $this->appendDebug('params=' . $this->varDump($params));
+        $this->appendDebug('headers=' . $this->varDump($headers));
         if ($headers)
         {
             $this->requestHeaders = $headers;
@@ -411,7 +411,7 @@ class Client extends Base
             // use WSDL for operation
             $this->opData = $opData;
             $this->_debug("found operation");
-            $this->appendDebug('opData=' . $this->publicDump($opData));
+            $this->appendDebug('opData=' . $this->varDump($opData));
             if (isset($opData['soapAction']))
             {
                 $soapAction = $opData['soapAction'];
@@ -434,6 +434,7 @@ class Client extends Base
                 $this->wsdl->namespaces[$nsPrefix] = $namespace;
             }
             $nsPrefix = $this->wsdl->getPrefixFromNamespace($namespace);
+            
             // serialize payload
             if (is_string($params))
             {
@@ -564,7 +565,7 @@ class Client extends Base
         {
             $this->return = $return;
             $this->_debug('sent message successfully and got a(n) '.gettype($return));
-            $this->appendDebug('return=' . $this->publicDump($return));
+            $this->appendDebug('return=' . $this->varDump($return));
             
             // fault?
             if (is_array($return) && isset($return['faultcode']))
@@ -599,7 +600,7 @@ class Client extends Base
                     // single 'out' parameter (normally the return value)
                     $return = array_shift($return);
                     $this->_debug('return shifted value: ');
-                    $this->appendDebug($this->publicDump($return));
+                    $this->appendDebug($this->varDump($return));
                     return $return;
                 // nothing returned (ie, echoVoid)
                 }
@@ -808,7 +809,7 @@ class Client extends Base
     protected function _parseResponse($headers, $data)
     {
         $this->_debug('Entering _parseResponse() for data of length ' . strlen($data) . ' headers:');
-        $this->appendDebug($this->publicDump($headers));
+        $this->appendDebug($this->varDump($headers));
         if (!isset($headers['content-type']))
         {
             $this->_setError('Response not of type text/xml (no content-type header)');
@@ -881,7 +882,7 @@ class Client extends Base
     public function setCurlOption($option, $value)
     {
         $this->_debug("setCurlOption option=$option, value=");
-        $this->appendDebug($this->publicDump($value));
+        $this->appendDebug($this->varDump($value));
         $this->curlOptions[$option] = $value;
     }
 
@@ -906,7 +907,7 @@ class Client extends Base
     public function setHeaders($headers)
     {
         $this->_debug("setHeaders headers=");
-        $this->appendDebug($this->publicDump($headers));
+        $this->appendDebug($this->varDump($headers));
         $this->requestHeaders = $headers;
     }
 
@@ -961,7 +962,7 @@ class Client extends Base
     public function setCredentials($username, $password, $authtype = 'basic', $certRequest = array())
     {
         $this->_debug("setCredentials username=$username authtype=$authtype certRequest=");
-        $this->appendDebug($this->publicDump($certRequest));
+        $this->appendDebug($this->varDump($certRequest));
         $this->username = $username;
         $this->password = $password;
         $this->authtype = $authtype;
@@ -1063,7 +1064,7 @@ class Client extends Base
     protected function _getProxyClassCode($r)
     {
         $this->_debug("in getProxy endPointType=$this->endPointType");
-        $this->appendDebug("wsdl=" . $this->publicDump($this->wsdl));
+        $this->appendDebug("wsdl=" . $this->varDump($this->wsdl));
         if ($this->endPointType != 'wsdl')
         {
             $evalStr = 'A proxy can only be created for a WSDL client';

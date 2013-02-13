@@ -1014,7 +1014,7 @@ class Client extends Base
     public function getProxy()
     {
         $r = rand();
-        $evalStr = $this->getProxyClassCode($r);
+        $evalStr = $this->_getProxyClassCode($r);
         //$this->debug("proxy class: $evalStr");
         if ($this->getError())
         {
@@ -1059,9 +1059,9 @@ class Client extends Base
     * dynamically creates proxy class code
     *
     * @return   string PHP/NuSOAP code for the proxy class
-    * @access   protected
+    * @access   private
     */
-    protected function getProxyClassCode($r)
+    private function _getProxyClassCode($r)
     {
         $this->debug("in getProxy endPointType=$this->endPointType");
         $this->appendDebug("wsdl=" . $this->varDump($this->wsdl));

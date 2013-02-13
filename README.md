@@ -3,9 +3,27 @@ NuSOAP5
 
 This is a modernization effort aimed at bringing the aging NuSOAP library up to PHP 5 standards
 
-*Version*: 0.0.1
+*Version*: 0.0.2
 
  - Initial conversion task
+
+What Is Working So Far
+----------------------
+
+As of version 0.0.2, basic Client functionality is in place
+
+Basic Usage
+-----------
+
+The "__autoload.php" file must be included / required before any action can be taken.
+
+**Client**
+
+$client = new NuSOAP\Client("url-to-wsdl");
+$client->setCredentials("username", "password", "authtype");
+
+$result = $client->call("FunctionName", $params);
+
 
 Initial Goals
 --------------

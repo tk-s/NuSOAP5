@@ -92,7 +92,7 @@ class Base
      * @var string
      * @access protected
      */
-    public $version = '0.0.1';
+    public $version = '0.0.2';
     
     /**
      * Current error string (manipulated by getError/setError)

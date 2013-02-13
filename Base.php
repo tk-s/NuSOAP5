@@ -227,7 +227,7 @@ class Base
         require_once(realpath(dirname(__FILE__)))."/functions.php";
 
         // Set debug level
-        static::$_debugLevel = $debugLevel;
+        static::$debugLevel = $debugLevel;
 
         // Set debug state
         static::$_debug = $debug;
@@ -241,7 +241,7 @@ class Base
     */
     public function getGlobalDebugLevel()
     {
-        return static::$_debugLevel;
+        return static::$debugLevel;
     }
 
     /**
@@ -252,7 +252,7 @@ class Base
     */
     public function setGlobalDebugLevel($level)
     {
-        static::$_debugLevel = $level;
+        static::$debugLevel = $level;
     }
 
     /**
@@ -263,7 +263,7 @@ class Base
     */
     protected function debug($string)
     {
-        if (static::$_debugLevel > 0)
+        if (static::$debugLevel > 0)
         {
             $this->appendDebug($this->getmicrotime().' '.get_class($this).": $string\n");
         }
@@ -277,7 +277,7 @@ class Base
     */
     public function appendDebug($string = "")
     {
-        if (static::$_debugLevel > 0)
+        if (static::$debugLevel > 0)
         {
             static::$_debugString .= $string;
         }

@@ -30,8 +30,7 @@ The "__autoload.php" file must be included / required before any action can be t
 Initial Goals
 --------------
 
-The NuSOAP library has been extremely useful in several of my projects, but as times goes on and PHP advances, 
-much of the core logic of this library has become either deprecated or had it's use discouraged.
+The NuSOAP library has been extremely useful in several of my projects, but as time goes on and PHP advances, much of the core logic of this library has become either deprecated or had it's use discouraged.
 
 This project aims to bring NuSOAP into the PHP 5 era, with a long-term goal of taking care of all of the
 // TODO's that you see spread throughout the code.

@@ -34,6 +34,10 @@ much of the core logic of this library has become either deprecated or had it's 
 This project aims to bring NuSOAP into the PHP 5 era, with a long-term goal of taking care of all of the
 // TODO's that you see spread throughout the code.
 
+The original NuSOAP project home is:
+
+http://sourceforge.net/projects/nusoap/
+
 ### For Now ###
 
 I intend only to modernize the library, without overly modifying functionality.
@@ -46,7 +50,6 @@ I intend only to modernize the library, without overly modifying functionality.
  - The code was inconsistent in style, so I have tried to implement the Allman style (http://en.wikipedia.org/wiki/Indent_style#Allman_style)
  - Class constructors are now __construct() rather than classname
  - Unified method and variable naming within classes, removing underscores
- - All class vars and methods listed as @private are now defined as protected
 
 
 **Keep in mind**

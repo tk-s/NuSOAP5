@@ -218,7 +218,7 @@ class Parser extends Base
     * @param    string $decodeUTF8 whether to decode UTF-8 to ISO-8859-1
     * @access   public
     */
-    function __construct($xml, $encoding='UTF-8', $method='', $decodeUTF8 = true)
+    public function __construct($xml, $encoding='UTF-8', $method='', $decodeUTF8 = true)
     {
         parent::__construct();
         $this->xml = $xml;
@@ -262,7 +262,7 @@ class Parser extends Base
             {
                 $this->debug('No XML declaration');
             }
-            $this->debug('Entering nusoap_parser(), length='.strlen($xml).', encoding='.$encoding);
+            $this->debug('Entering Parser(), length='.strlen($xml).', encoding='.$encoding);
             // Create an XML parser - why not xml_parser_create_ns?
             $this->parser = xml_parser_create($this->xmlEncoding);
             // Set the options for parsing the XML data.
@@ -288,7 +288,7 @@ class Parser extends Base
             }
             else
             {
-                $this->debug('in nusoap_parser ctor, message:');
+                $this->debug('in Parser ctor, message:');
                 $this->appendDebug($this->varDump($this->message));
                 $this->debug('parsed successfully, found root struct: '.$this->rootStruct.' of name '.$this->rootStructName);
                 // get final value
@@ -332,7 +332,7 @@ class Parser extends Base
     * @param    resource $parser XML parser object
     * @param    string $name element name
     * @param    array $attrs associative array of attributes
-    * @access   private
+    * @access   protected
     */
     protected function startElement($parser, $name, Array $attrs)
     {
@@ -715,7 +715,7 @@ class Parser extends Base
     * @return   mixed
     * @access   public
     */
-    function getSoapBody()
+    public function getSoapBody()
     {
         return $this->soapResponse;
     }
@@ -726,7 +726,7 @@ class Parser extends Base
     * @return   mixed
     * @access   public
     */
-    function getSoapHeader()
+    public function getSoapHeader()
     {
         return $this->soapHeader;
     }
@@ -737,7 +737,7 @@ class Parser extends Base
     * @return   string XML or empty if no Header
     * @access   public
     */
-    function getHeaders()
+    public function getHeaders()
     {
         return $this->responseHeaders;
     }

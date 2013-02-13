@@ -843,8 +843,8 @@ class Client extends Base
             $this->xml_encoding = 'ISO-8859-1';
         }
         
-        $this->debug('Use encoding: ' . $this->xml_encoding . ' when creating nusoap_parser');
-        $parser = new nusoap_parser($data,$this->xml_encoding,$this->operation,$this->decodeUTF8);
+        $this->debug('Use encoding: ' . $this->xml_encoding . ' when creating Parser');
+        $parser = new Parser($data,$this->xml_encoding,$this->operation,$this->decodeUTF8);
         
         // add parser debug data to our debug
         $this->appendDebug($parser->getDebug());

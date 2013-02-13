@@ -558,7 +558,7 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $name = $this->CreateTypeName($this->currentElement);
+                    $name = $this->_createTypeName($this->currentElement);
                     $this->_xdebug('processing unnamed complexType for element ' . $this->currentElement . ' named ' . $name);
                     $this->currentComplexType = $name;
                     //$this->currentElement = false;
@@ -632,7 +632,7 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $type = $this->CreateTypeName($this->currentComplexType . '_' . $attrs['name']);
+                    $type = $this->_createTypeName($this->currentComplexType . '_' . $attrs['name']);
                     $this->_xdebug("processing untyped element " . $attrs['name'] . ' type ' . $type);
                     $this->currentElement = $attrs['name'];
                     $attrs['type'] = $this->schemaTargetNamespace . ':' . $type;
@@ -775,7 +775,7 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $name = $this->CreateTypeName($this->currentComplexType . '_' . $this->currentElement);
+                    $name = $this->_createTypeName($this->currentComplexType . '_' . $this->currentElement);
                     $this->_xdebug('processing unnamed simpleType for element ' . $this->currentElement . ' named ' . $name);
                     $this->currentSimpleType = $name;
                     //$this->currentElement = false;

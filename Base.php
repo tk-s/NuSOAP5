@@ -1017,6 +1017,17 @@ class Base
     }
 
     /**
+     * Returns namespaces used
+     * 
+     * @access  public
+     * @return Array
+     */
+    public function getUsedNamespaces()
+    {
+        return static::$usedNamespaces;
+    }
+
+    /**
      * Returns a string with the output of var_dump
      *
      * @param mixed $data The variable to var_dump

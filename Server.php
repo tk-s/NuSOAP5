@@ -895,7 +895,7 @@ class Server extends Base
                 $encodingStyle = '';
             }
             // Added: In case we use a WSDL, return a serialized env. WITH the usedNamespaces.
-            $this->responseSOAP = $this->serializeEnvelope($payload,$this->responseHeaders,$this->wsdl->usedNamespaces,$this->opData['style'],$this->opData['output']['use'],$encodingStyle);
+            $this->responseSOAP = $this->serializeEnvelope($payload,$this->responseHeaders,static::$usedNamespaces,$this->opData['style'],$this->opData['output']['use'],$encodingStyle);
         }
         else
         {

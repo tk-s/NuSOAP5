@@ -452,7 +452,7 @@ class Client extends Base
                 $this->setError('params must be array or string');
                 return false;
             }
-            $usedNamespaces = $this->wsdl->usedNamespaces;
+
             if (isset($opData['input']['encodingStyle']))
             {
                 $encodingStyle = $opData['input']['encodingStyle'];
@@ -505,7 +505,9 @@ class Client extends Base
                 $this->setError('params must be array or string');
                 return false;
             }
-            $usedNamespaces = array();
+            
+            static::$usedNamespaces = array();
+
             if ($use == 'encoded')
             {
                 $encodingStyle = 'http://schemas.xmlsoap.org/soap/encoding/';
@@ -551,7 +553,7 @@ class Client extends Base
             }
         }
         // serialize envelope
-        $soapmsg = $this->serializeEnvelope($payload,$this->requestHeaders,$usedNamespaces,$style,$use,$encodingStyle);
+        $soapmsg = $this->serializeEnvelope($payload,$this->requestHeaders,static::$usedNamespaces,$style,$use,$encodingStyle);
         $this->debug("endPoint=$this->endPoint, soapAction=$soapAction, namespace=$namespace, style=$style, use=$use, encodingStyle=$encodingStyle");
         $this->debug('SOAP message length=' . strlen($soapmsg) . ' contents (max 1000 bytes)=' . substr($soapmsg, 0, 1000));
         // send

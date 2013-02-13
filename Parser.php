@@ -240,57 +240,57 @@ class Parser extends Base
                     if (strtoupper($xmlEncoding) != $encoding)
                     {
                         $err = "Charset from HTTP Content-Type '" . $encoding . "' does not match encoding from XML declaration '" . $xmlEncoding . "'";
-                        $this->_debug($err);
+                        $this->debug($err);
                         if ($encoding != 'ISO-8859-1' || strtoupper($xmlEncoding) != 'UTF-8')
                         {
-                            $this->_setError($err);
+                            $this->setError($err);
                             return;
                         }
                         // when HTTP says ISO-8859-1 (the default) and XML says UTF-8 (the typical), assume the other endpoint is just sloppy and proceed
                     }
                     else
                     {
-                        $this->_debug('Charset from HTTP Content-Type matches encoding from XML declaration');
+                        $this->debug('Charset from HTTP Content-Type matches encoding from XML declaration');
                     }
                 }
                 else
                 {
-                    $this->_debug('No encoding specified in XML declaration');
+                    $this->debug('No encoding specified in XML declaration');
                 }
             }
             else
             {
-                $this->_debug('No XML declaration');
+                $this->debug('No XML declaration');
             }
-            $this->_debug('Entering nusoap_parser(), length='.strlen($xml).', encoding='.$encoding);
+            $this->debug('Entering nusoap_parser(), length='.strlen($xml).', encoding='.$encoding);
             // Create an XML parser - why not xml_parser_create_ns?
-            $this->_parser = xml_parser_create($this->xmlEncoding);
+            $this->parser = xml_parser_create($this->xmlEncoding);
             // Set the options for parsing the XML data.
             //xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-            xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, 0);
-            xml_parser_set_option($this->_parser, XML_OPTION_TARGET_ENCODING, $this->xmlEncoding);
+            xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, 0);
+            xml_parser_set_option($this->parser, XML_OPTION_TARGET_ENCODING, $this->xmlEncoding);
             // Set the object for the parser.
-            xml_set_object($this->_parser, $this);
+            xml_set_object($this->parser, $this);
             // Set the element handlers for the parser.
-            xml_set_element_handler($this->_parser, 'start_element','end_element');
-            xml_set_character_data_handler($this->_parser,'character_data');
+            xml_set_element_handler($this->parser, 'start_element','end_element');
+            xml_set_character_data_handler($this->parser,'character_data');
 
             // Parse the XML file.
-            if (!xml_parse($this->_parser,$xml,true))
+            if (!xml_parse($this->parser,$xml,true))
             {
                 // Display an error message.
                 $err = sprintf('XML error parsing SOAP payload on line %d: %s',
-                xml_get_current_line_number($this->_parser),
-                xml_error_string(xml_get_error_code($this->_parser)));
-                $this->_debug($err);
-                $this->_debug("XML payload:\n" . $xml);
-                $this->_setError($err);
+                xml_get_current_line_number($this->parser),
+                xml_error_string(xml_get_error_code($this->parser)));
+                $this->debug($err);
+                $this->debug("XML payload:\n" . $xml);
+                $this->setError($err);
             }
             else
             {
-                $this->_debug('in nusoap_parser ctor, message:');
+                $this->debug('in nusoap_parser ctor, message:');
                 $this->appendDebug($this->varDump($this->message));
-                $this->_debug('parsed successfully, found root struct: '.$this->rootStruct.' of name '.$this->rootStructName);
+                $this->debug('parsed successfully, found root struct: '.$this->rootStruct.' of name '.$this->rootStructName);
                 // get final value
                 $this->soapResponse = $this->message[$this->rootStruct]['result'];
                 // get header value
@@ -303,26 +303,26 @@ class Parser extends Base
                 {
                     foreach ($this->multiRefs as $id => $hrefs)
                     {
-                        $this->_debug('resolving multiRefs for id: '.$id);
-                        $idVal = $this->_buildVal($this->ids[$id]);
+                        $this->debug('resolving multiRefs for id: '.$id);
+                        $idVal = $this->buildVal($this->ids[$id]);
                         if (is_array($idVal) && isset($idVal['!id']))
                         {
                             unset($idVal['!id']);
                         }
                         foreach ($hrefs as $refPos => $ref)
                         {
-                            $this->_debug('resolving href at pos '.$refPos);
+                            $this->debug('resolving href at pos '.$refPos);
                             $this->multiRefs[$id][$refPos] = $idVal;
                         }
                     }
                 }
             }
-            xml_parser_free($this->_parser);
+            xml_parser_free($this->parser);
         }
         else
         {
-            $this->_debug('xml was empty, didn\'t parse!');
-            $this->_setError('xml was empty, didn\'t parse!');
+            $this->debug('xml was empty, didn\'t parse!');
+            $this->setError('xml was empty, didn\'t parse!');
         }
     }
 
@@ -391,7 +391,7 @@ class Parser extends Base
             $this->rootStructName = $name;
             $this->rootStruct = $pos;
             $this->message[$pos]['type'] = 'struct';
-            $this->_debug("found root struct $this->rootStructName, pos $this->rootStruct");
+            $this->debug("found root struct $this->rootStructName, pos $this->rootStruct");
         }
         // set my status
         $this->message[$pos]['status'] = $this->status;
@@ -502,7 +502,7 @@ class Parser extends Base
                 $this->status = 'method';
                 $this->rootStructName = $name;
                 $this->rootStruct = $pos;
-                $this->_debug("found root struct $this->rootStructName, pos $pos");
+                $this->debug("found root struct $this->rootStructName, pos $pos");
             }
             // for doclit
             $attstr .= " $key=\"$value\"";
@@ -570,7 +570,7 @@ class Parser extends Base
                 // if result has already been generated (struct/array)
                 if (!isset($this->message[$pos]['result']))
                 {
-                    $this->message[$pos]['result'] = $this->_buildVal($pos);
+                    $this->message[$pos]['result'] = $this->buildVal($pos);
                 }
             // build complexType values of attributes and possibly simpleContent
             }
@@ -584,14 +584,14 @@ class Parser extends Base
                 {
                     if (isset($this->message[$pos]['type']))
                     {
-                        $this->message[$pos]['xattrs']['!'] = $this->_decodeSimple($this->message[$pos]['cdata'], $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
+                        $this->message[$pos]['xattrs']['!'] = $this->decodeSimple($this->message[$pos]['cdata'], $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
                     }
                     else
                     {
                         $parent = $this->message[$pos]['parent'];
                         if (isset($this->message[$parent]['type']) && ($this->message[$parent]['type'] == 'array') && isset($this->message[$parent]['arrayType']))
                         {
-                            $this->message[$pos]['xattrs']['!'] = $this->_decodeSimple($this->message[$pos]['cdata'], $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
+                            $this->message[$pos]['xattrs']['!'] = $this->decodeSimple($this->message[$pos]['cdata'], $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
                         }
                         else
                         {
@@ -604,21 +604,21 @@ class Parser extends Base
             }
             else
             {
-                //$this->_debug('adding data for scalar value '.$this->message[$pos]['name'].' of value '.$this->message[$pos]['cdata']);
+                //$this->debug('adding data for scalar value '.$this->message[$pos]['name'].' of value '.$this->message[$pos]['cdata']);
                 if (isset($this->message[$pos]['nil']) && $this->message[$pos]['nil'])
                 {
                     $this->message[$pos]['xattrs']['!'] = null;
                 }
                 else if (isset($this->message[$pos]['type']))
                 {
-                    $this->message[$pos]['result'] = $this->_decodeSimple($this->message[$pos]['cdata'], $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
+                    $this->message[$pos]['result'] = $this->decodeSimple($this->message[$pos]['cdata'], $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
                 }
                 else
                 {
                     $parent = $this->message[$pos]['parent'];
                     if (isset($this->message[$parent]['type']) && ($this->message[$parent]['type'] == 'array') && isset($this->message[$parent]['arrayType']))
                     {
-                        $this->message[$pos]['result'] = $this->_decodeSimple($this->message[$pos]['cdata'], $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
+                        $this->message[$pos]['result'] = $this->decodeSimple($this->message[$pos]['cdata'], $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
                     }
                     else
                     {
@@ -691,7 +691,7 @@ class Parser extends Base
         {
             // TODO: add an option to disable this for folks who want
             // raw UTF-8 that, e.g., might not map to iso-8859-1
-            // TODO: this can also be handled with xml_parser_set_option($this->_parser, XML_OPTION_TARGET_ENCODING, "ISO-8859-1");
+            // TODO: this can also be handled with xml_parser_set_option($this->parser, XML_OPTION_TARGET_ENCODING, "ISO-8859-1");
             if ($this->decodeUTF8)
             {
                 $data = utf8_decode($data);
@@ -780,7 +780,7 @@ class Parser extends Base
 
         if ($type == 'base64' || $type == 'base64Binary')
         {
-            $this->_debug('Decode base64 value');
+            $this->debug('Decode base64 value');
             return base64_decode($value);
         }
         
@@ -816,12 +816,12 @@ class Parser extends Base
             $this->message[$pos]['type'] = '';
         }
 
-        $this->_debug('in buildVal() for '.$this->message[$pos]['name']."(pos $pos) of type ".$this->message[$pos]['type']);
+        $this->debug('in buildVal() for '.$this->message[$pos]['name']."(pos $pos) of type ".$this->message[$pos]['type']);
         
         // if there are children...
         if ($this->message[$pos]['children'] != '')
         {
-            $this->_debug('in buildVal, there are children');
+            $this->debug('in buildVal, there are children');
             $children = explode('|',$this->message[$pos]['children']);
             array_shift($children); // knock off empty
             
@@ -832,7 +832,7 @@ class Parser extends Base
                 $c=0; // colcount
                 foreach ($children as $child_pos)
                 {
-                    $this->_debug("in buildVal, got an MD array element: $r, $c");
+                    $this->debug("in buildVal, got an MD array element: $r, $c");
                     $params[$r][] = $this->message[$child_pos]['result'];
                     $c++;
                     if ($c == $this->message[$pos]['arrayCols'])
@@ -845,7 +845,7 @@ class Parser extends Base
             }
             else if (strtolower($this->message[$pos]['type']) == 'array')
             {
-                $this->_debug('in buildVal, adding array '.$this->message[$pos]['name']);
+                $this->debug('in buildVal, adding array '.$this->message[$pos]['name']);
                 foreach ($children as $child_pos)
                 {
                     $params[] = &$this->message[$child_pos]['result'];
@@ -854,7 +854,7 @@ class Parser extends Base
             }
             else if ($this->message[$pos]['type'] == 'Map' && $this->message[$pos]['type_namespace'] == 'http://xml.apache.org/xml-soap')
             {
-                $this->_debug('in buildVal, Java Map '.$this->message[$pos]['name']);
+                $this->debug('in buildVal, Java Map '.$this->message[$pos]['name']);
                 foreach ($children as $child_pos){
                     $kv = explode("|",$this->message[$child_pos]['children']);
                     $params[$this->message[$kv[1]]['result']] = &$this->message[$kv[2]]['result'];
@@ -865,7 +865,7 @@ class Parser extends Base
             else
             {
                 // Apache Vector type: treat as an array
-                $this->_debug('in buildVal, adding Java Vector or generic compound type '.$this->message[$pos]['name']);
+                $this->debug('in buildVal, adding Java Vector or generic compound type '.$this->message[$pos]['name']);
                 if ($this->message[$pos]['type'] == 'Vector' && $this->message[$pos]['type_namespace'] == 'http://xml.apache.org/xml-soap')
                 {
                     $notstruct = 1;
@@ -902,7 +902,7 @@ class Parser extends Base
             }
             if (isset($this->message[$pos]['xattrs']))
             {
-                $this->_debug('in buildVal, handling attributes');
+                $this->debug('in buildVal, handling attributes');
                 foreach ($this->message[$pos]['xattrs'] as $n => $v)
                 {
                     $params[$n] = $v;
@@ -911,17 +911,17 @@ class Parser extends Base
             // handle simpleContent
             if (isset($this->message[$pos]['cdata']) && trim($this->message[$pos]['cdata']) != '')
             {
-                $this->_debug('in buildVal, handling simpleContent');
+                $this->debug('in buildVal, handling simpleContent');
                 if (isset($this->message[$pos]['type']))
                 {
-                    $params['!'] = $this->_decodeSimple($this->message[$pos]['cdata'], $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
+                    $params['!'] = $this->decodeSimple($this->message[$pos]['cdata'], $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
                 }
                 else
                 {
                     $parent = $this->message[$pos]['parent'];
                     if (isset($this->message[$parent]['type']) && $this->message[$parent]['type'] == 'array' && isset($this->message[$parent]['arrayType']))
                     {
-                        $params['!'] = $this->_decodeSimple($this->message[$pos]['cdata'], $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
+                        $params['!'] = $this->decodeSimple($this->message[$pos]['cdata'], $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
                     }
                     else
                     {
@@ -930,29 +930,29 @@ class Parser extends Base
                 }
             }
             $ret = is_array($params) ? $params : array();
-            $this->_debug('in buildVal, return:');
+            $this->debug('in buildVal, return:');
             $this->appendDebug($this->varDump($ret));
             return $ret;
         }
         else
         {
-            $this->_debug('in buildVal, no children, building scalar');
+            $this->debug('in buildVal, no children, building scalar');
             $cdata = isset($this->message[$pos]['cdata']) ? $this->message[$pos]['cdata'] : '';
             if (isset($this->message[$pos]['type']))
             {
-                $ret = $this->_decodeSimple($cdata, $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
-                $this->_debug("in buildVal, return: $ret");
+                $ret = $this->decodeSimple($cdata, $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
+                $this->debug("in buildVal, return: $ret");
                 return $ret;
             }
             $parent = $this->message[$pos]['parent'];
             if (isset($this->message[$parent]['type']) && ($this->message[$parent]['type'] == 'array') && isset($this->message[$parent]['arrayType']))
             {
-                $ret = $this->_decodeSimple($cdata, $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
-                $this->_debug("in buildVal, return: $ret");
+                $ret = $this->decodeSimple($cdata, $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
+                $this->debug("in buildVal, return: $ret");
                 return $ret;
             }
             $ret = $this->message[$pos]['cdata'];
-            $this->_debug("in buildVal, return: $ret");
+            $this->debug("in buildVal, return: $ret");
             return $ret;
         }
     }

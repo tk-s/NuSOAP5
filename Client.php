@@ -316,7 +316,7 @@ class Client extends Base
         $this->responseTimeout = $responseTimeout;
         $this->portName = $portName;
 
-        $this->_debug("ctor wsdl=$wsdl timeout=$timeout responseTimeout=$responseTimeout");
+        $this->debug("ctor wsdl=$wsdl timeout=$timeout responseTimeout=$responseTimeout");
         $this->appendDebug('endPoint=' . $this->varDump($endPoint));
 
         // make values
@@ -327,20 +327,20 @@ class Client extends Base
                 $this->wsdl = $endPoint;
                 $this->endPoint = $this->wsdl->wsdl;
                 $this->wsdlFile = $this->endPoint;
-                $this->_debug('existing wsdl instance created from ' . $this->endPoint);
-                $this->_checkWSDL();
+                $this->debug('existing wsdl instance created from ' . $this->endPoint);
+                $this->checkWSDL();
             }
             else
             {
                 $this->wsdlFile = $this->endPoint;
                 $this->wsdl = null;
-                $this->_debug('will use lazy evaluation of wsdl from ' . $this->endPoint);
+                $this->debug('will use lazy evaluation of wsdl from ' . $this->endPoint);
             }
             $this->endPointType = 'wsdl';
         }
         else
         {
-            $this->_debug("instantiate SOAP with endPoint at $endPoint");
+            $this->debug("instantiate SOAP with endPoint at $endPoint");
             $this->endPointType = 'soap';
         }
     }
@@ -382,7 +382,7 @@ class Client extends Base
     {
         $this->operation = $operation;
         $this->fault = false;
-        $this->_setError('');
+        $this->setError('');
         $this->request = '';
         $this->response = '';
         $this->responseData = '';
@@ -390,7 +390,7 @@ class Client extends Base
         $this->faultcode = ''; 
         $this->opData = array();
         
-        $this->_debug("call: operation=$operation, namespace=$namespace, soapAction=$soapAction, rpcParams=$rpcParams, style=$style, use=$use, endPointType=$this->endPointType");
+        $this->debug("call: operation=$operation, namespace=$namespace, soapAction=$soapAction, rpcParams=$rpcParams, style=$style, use=$use, endPointType=$this->endPointType");
         $this->appendDebug('params=' . $this->varDump($params));
         $this->appendDebug('headers=' . $this->varDump($headers));
         if ($headers)
@@ -410,7 +410,7 @@ class Client extends Base
         {
             // use WSDL for operation
             $this->opData = $opData;
-            $this->_debug("found operation");
+            $this->debug("found operation");
             $this->appendDebug('opData=' . $this->varDump($opData));
             if (isset($opData['soapAction']))
             {
@@ -438,18 +438,18 @@ class Client extends Base
             // serialize payload
             if (is_string($params))
             {
-                $this->_debug("serializing param string for WSDL operation $operation");
+                $this->debug("serializing param string for WSDL operation $operation");
                 $payload = $params;
             }
             else if (is_array($params))
             {
-                $this->_debug("serializing param array for WSDL operation $operation");
+                $this->debug("serializing param array for WSDL operation $operation");
                 $payload = $this->wsdl->serializeRPCParameters($operation,'input',$params,$this->bindingType);
             }
             else
             {
-                $this->_debug('params must be array or string');
-                $this->_setError('params must be array or string');
+                $this->debug('params must be array or string');
+                $this->setError('params must be array or string');
                 return false;
             }
             $usedNamespaces = $this->wsdl->usedNamespaces;
@@ -465,8 +465,8 @@ class Client extends Base
             $this->wsdl->clearDebug();
             if ($errstr = $this->wsdl->getError())
             {
-                $this->_debug('got wsdl error: '.$errstr);
-                $this->_setError('wsdl error: '.$errstr);
+                $this->debug('got wsdl error: '.$errstr);
+                $this->setError('wsdl error: '.$errstr);
                 return false;
             }
         }
@@ -475,8 +475,8 @@ class Client extends Base
             // operation not in WSDL
             $this->appendDebug($this->wsdl->getDebug());
             $this->wsdl->clearDebug();
-            $this->_setError('operation '.$operation.' not present in WSDL.');
-            $this->_debug("operation '$operation' not present in WSDL.");
+            $this->setError('operation '.$operation.' not present in WSDL.');
+            $this->debug("operation '$operation' not present in WSDL.");
             return false;
         }
         else
@@ -488,12 +488,12 @@ class Client extends Base
             $payload = '';
             if (is_string($params))
             {
-                $this->_debug("serializing param string for operation $operation");
+                $this->debug("serializing param string for operation $operation");
                 $payload = $params;
             }
             else if (is_array($params))
             {
-                $this->_debug("serializing param array for operation $operation");
+                $this->debug("serializing param array for operation $operation");
                 foreach ($params as $k => $v)
                 {
                     $payload .= $this->serialize_val($v,$k,false,false,false,false,$use);
@@ -501,8 +501,8 @@ class Client extends Base
             }
             else
             {
-                $this->_debug('params must be array or string');
-                $this->_setError('params must be array or string');
+                $this->debug('params must be array or string');
+                $this->setError('params must be array or string');
                 return false;
             }
             $usedNamespaces = array();
@@ -520,7 +520,7 @@ class Client extends Base
         {
             if ($use == 'literal')
             {
-                $this->_debug("wrapping RPC request with literal method element");
+                $this->debug("wrapping RPC request with literal method element");
                 if ($namespace)
                 {
                     // http://www.ws-i.org/Profiles/BasicProfile-1.1-2004-08-24.html R2735 says rpc/literal accessor elements should not be in a namespace
@@ -535,7 +535,7 @@ class Client extends Base
             }
             else
             {
-                $this->_debug("wrapping RPC request with encoded method element");
+                $this->debug("wrapping RPC request with encoded method element");
                 if ($namespace)
                 {
                     $payload = "<$nsPrefix:$operation xmlns:$nsPrefix=\"$namespace\">" .
@@ -552,31 +552,31 @@ class Client extends Base
         }
         // serialize envelope
         $soapmsg = $this->serializeEnvelope($payload,$this->requestHeaders,$usedNamespaces,$style,$use,$encodingStyle);
-        $this->_debug("endPoint=$this->endPoint, soapAction=$soapAction, namespace=$namespace, style=$style, use=$use, encodingStyle=$encodingStyle");
-        $this->_debug('SOAP message length=' . strlen($soapmsg) . ' contents (max 1000 bytes)=' . substr($soapmsg, 0, 1000));
+        $this->debug("endPoint=$this->endPoint, soapAction=$soapAction, namespace=$namespace, style=$style, use=$use, encodingStyle=$encodingStyle");
+        $this->debug('SOAP message length=' . strlen($soapmsg) . ' contents (max 1000 bytes)=' . substr($soapmsg, 0, 1000));
         // send
-        $return = $this->_send($this->_getHTTPBody($soapmsg),$soapAction,$this->timeout,$this->responseTimeout);
+        $return = $this->send($this->getHTTPBody($soapmsg),$soapAction,$this->timeout,$this->responseTimeout);
         if ($errstr = $this->getError())
         {
-            $this->_debug('Error: '.$errstr);
+            $this->debug('Error: '.$errstr);
             return false;
         }
         else
         {
             $this->return = $return;
-            $this->_debug('sent message successfully and got a(n) '.gettype($return));
+            $this->debug('sent message successfully and got a(n) '.gettype($return));
             $this->appendDebug('return=' . $this->varDump($return));
             
             // fault?
             if (is_array($return) && isset($return['faultcode']))
             {
-                $this->_debug('got fault');
-                $this->_setError($return['faultcode'].': '.$return['faultstring']);
+                $this->debug('got fault');
+                $this->setError($return['faultcode'].': '.$return['faultstring']);
                 $this->fault = true;
                 foreach ($return as $k => $v)
                 {
                     $this->$k = $v;
-                    $this->_debug("$k = $v<br>");
+                    $this->debug("$k = $v<br>");
                 }
                 return $return;
             }
@@ -599,7 +599,7 @@ class Client extends Base
                     }
                     // single 'out' parameter (normally the return value)
                     $return = array_shift($return);
-                    $this->_debug('return shifted value: ');
+                    $this->debug('return shifted value: ');
                     $this->appendDebug($this->varDump($return));
                     return $return;
                 // nothing returned (ie, echoVoid)
@@ -621,37 +621,37 @@ class Client extends Base
     {
         $this->appendDebug($this->wsdl->getDebug());
         $this->wsdl->clearDebug();
-        $this->_debug('_checkWSDL');
+        $this->debug('_checkWSDL');
         
         // catch errors
         if ($errstr = $this->wsdl->getError())
         {
             $this->appendDebug($this->wsdl->getDebug());
             $this->wsdl->clearDebug();
-            $this->_debug('got wsdl error: '.$errstr);
-            $this->_setError('wsdl error: '.$errstr);
+            $this->debug('got wsdl error: '.$errstr);
+            $this->setError('wsdl error: '.$errstr);
         }
         else if ($this->operations = $this->wsdl->getOperations($this->portName, 'soap'))
         {
             $this->appendDebug($this->wsdl->getDebug());
             $this->wsdl->clearDebug();
             $this->bindingType = 'soap';
-            $this->_debug('got '.count($this->operations).' operations from wsdl '.$this->wsdlFile.' for binding type '.$this->bindingType);
+            $this->debug('got '.count($this->operations).' operations from wsdl '.$this->wsdlFile.' for binding type '.$this->bindingType);
         }
         else if ($this->operations = $this->wsdl->getOperations($this->portName, 'soap12'))
         {
             $this->appendDebug($this->wsdl->getDebug());
             $this->wsdl->clearDebug();
             $this->bindingType = 'soap12';
-            $this->_debug('got '.count($this->operations).' operations from wsdl '.$this->wsdlFile.' for binding type '.$this->bindingType);
-            $this->_debug('**************** WARNING: SOAP 1.2 BINDING *****************');
+            $this->debug('got '.count($this->operations).' operations from wsdl '.$this->wsdlFile.' for binding type '.$this->bindingType);
+            $this->debug('**************** WARNING: SOAP 1.2 BINDING *****************');
         }
         else
         {
             $this->appendDebug($this->wsdl->getDebug());
             $this->wsdl->clearDebug();
-            $this->_debug('getOperations returned false');
-            $this->_setError('no operations defined in the WSDL document!');
+            $this->debug('getOperations returned false');
+            $this->setError('no operations defined in the WSDL document!');
         }
     }
 
@@ -662,11 +662,11 @@ class Client extends Base
      */
     public function loadWSDL()
     {
-        $this->_debug('instantiating wsdl class with doc: '.$this->wsdlFile);
+        $this->debug('instantiating wsdl class with doc: '.$this->wsdlFile);
         $this->wsdl = new wsdl('',$this->proxyHost,$this->proxyPort,$this->proxyUsername,$this->proxyPassword,$this->timeout,$this->responseTimeout,$this->curlOptions,$this->useCurl);
         $this->wsdl->setCredentials($this->username, $this->password, $this->authtype, $this->certRequest);
         $this->wsdl->fetchWSDL($this->wsdlFile);
-        $this->_checkWSDL();
+        $this->checkWSDL();
     }
 
     /**
@@ -690,7 +690,7 @@ class Client extends Base
         {
             return $this->operations[$operation];
         }
-        $this->_debug("No data for operation: $operation");
+        $this->debug("No data for operation: $operation");
     }
 
     /**
@@ -709,13 +709,13 @@ class Client extends Base
     */
     protected function send($msg, $soapaction = '', $timeout = 0, $responseTimeout = 30)
     {
-        $this->_checkCookies();
+        $this->checkCookies();
         // detect transport
         switch (true)
         {
             // http(s)
             case preg_match('/^http/',$this->endPoint) :
-                $this->_debug('transporting via HTTP');
+                $this->debug('transporting via HTTP');
                 
                 if ($this->persistentConnection == true && is_object($this->persistentConnection))
                 {
@@ -730,7 +730,7 @@ class Client extends Base
                     }
                 }
                 
-                $http->setContentType($this->_getHTTPContentType(), $this->_getHTTPContentTypeCharset());
+                $http->setContentType($this->getHTTPContentType(), $this->getHTTPContentTypeCharset());
                 $http->setSOAPAction($soapaction);
                 
                 if ($this->proxyHost && $this->proxyPort)
@@ -746,7 +746,7 @@ class Client extends Base
                     $http->setEncoding($this->httpEncoding);
                 }
                 
-                $this->_debug('sending message, length='.strlen($msg));
+                $this->debug('sending message, length='.strlen($msg));
                 if (preg_match('/^http:/',$this->endPoint))
                 {
                     $this->responseData = $http->send($msg,$timeout,$responseTimeout,$this->cookies);
@@ -757,13 +757,13 @@ class Client extends Base
                 }
                 else
                 {
-                    $this->_setError('no http/s in endPoint url');
+                    $this->setError('no http/s in endPoint url');
                 }
                 
                 $this->request = $http->outgoing_payload;
                 $this->response = $http->incoming_payload;
                 $this->appendDebug($http->getDebug());
-                $this->_updateCookies($http->incoming_cookies);
+                $this->updateCookies($http->incoming_cookies);
 
                 // save transport object if using persistent connections
                 if ($this->persistentConnection)
@@ -777,7 +777,7 @@ class Client extends Base
                 
                 if ($err = $http->getError())
                 {
-                    $this->_setError('HTTP Error: '.$err);
+                    $this->setError('HTTP Error: '.$err);
                     return false;
                 }
                 else if ($this->getError())
@@ -786,13 +786,13 @@ class Client extends Base
                 }
                 else
                 {
-                    $this->_debug('got response, length='. strlen($this->responseData).' type='.$http->incoming_headers['content-type']);
-                    return $this->_parseResponse($http->incoming_headers, $this->responseData);
+                    $this->debug('got response, length='. strlen($this->responseData).' type='.$http->incoming_headers['content-type']);
+                    return $this->parseResponse($http->incoming_headers, $this->responseData);
                 }
             break;
 
             default:
-                $this->_setError('no transport found, or selected transport is not yet supported!');
+                $this->setError('no transport found, or selected transport is not yet supported!');
             return false;
             break;
         }
@@ -808,24 +808,24 @@ class Client extends Base
     */
     protected function parseResponse($headers, $data)
     {
-        $this->_debug('Entering _parseResponse() for data of length ' . strlen($data) . ' headers:');
+        $this->debug('Entering _parseResponse() for data of length ' . strlen($data) . ' headers:');
         $this->appendDebug($this->varDump($headers));
         if (!isset($headers['content-type']))
         {
-            $this->_setError('Response not of type text/xml (no content-type header)');
+            $this->setError('Response not of type text/xml (no content-type header)');
             return false;
         }
         
         if (!strstr($headers['content-type'], 'text/xml'))
         {
-            $this->_setError('Response not of type text/xml: ' . $headers['content-type']);
+            $this->setError('Response not of type text/xml: ' . $headers['content-type']);
             return false;
         }
         
         if (strpos($headers['content-type'], '='))
         {
             $enc = str_replace('"', '', substr(strstr($headers["content-type"], '='), 1));
-            $this->_debug('Got response encoding: ' . $enc);
+            $this->debug('Got response encoding: ' . $enc);
             if (preg_match('/^(ISO-8859-1|US-ASCII|UTF-8)$/i',$enc))
             {
                 $this->xml_encoding = strtoupper($enc);
@@ -841,7 +841,7 @@ class Client extends Base
             $this->xml_encoding = 'ISO-8859-1';
         }
         
-        $this->_debug('Use encoding: ' . $this->xml_encoding . ' when creating nusoap_parser');
+        $this->debug('Use encoding: ' . $this->xml_encoding . ' when creating nusoap_parser');
         $parser = new nusoap_parser($data,$this->xml_encoding,$this->operation,$this->decodeUTF8);
         
         // add parser debug data to our debug
@@ -850,7 +850,7 @@ class Client extends Base
         // if parse errors
         if ($errstr = $parser->getError())
         {
-            $this->_setError( $errstr);
+            $this->setError( $errstr);
             // destroy the parser object
             unset($parser);
             return false;
@@ -881,7 +881,7 @@ class Client extends Base
     */
     public function setCurlOption($option, $value)
     {
-        $this->_debug("setCurlOption option=$option, value=");
+        $this->debug("setCurlOption option=$option, value=");
         $this->appendDebug($this->varDump($value));
         $this->curlOptions[$option] = $value;
     }
@@ -894,7 +894,7 @@ class Client extends Base
     */
     public function setEndpoint($endPoint)
     {
-        $this->_debug("setEndpoint(\"$endPoint\")");
+        $this->debug("setEndpoint(\"$endPoint\")");
         $this->forceEndpoint = $endPoint;
     }
 
@@ -906,7 +906,7 @@ class Client extends Base
     */
     public function setHeaders($headers)
     {
-        $this->_debug("setHeaders headers=");
+        $this->debug("setHeaders headers=");
         $this->appendDebug($this->varDump($headers));
         $this->requestHeaders = $headers;
     }
@@ -961,7 +961,7 @@ class Client extends Base
     */
     public function setCredentials($username, $password, $authtype = 'basic', $certRequest = array())
     {
-        $this->_debug("setCredentials username=$username authtype=$authtype certRequest=");
+        $this->debug("setCredentials username=$username authtype=$authtype certRequest=");
         $this->appendDebug($this->varDump($certRequest));
         $this->username = $username;
         $this->password = $password;
@@ -977,7 +977,7 @@ class Client extends Base
     */
     public function setHTTPEncoding($enc='gzip, deflate')
     {
-        $this->_debug("setHTTPEncoding(\"$enc\")");
+        $this->debug("setHTTPEncoding(\"$enc\")");
         $this->httpEncoding = $enc;
     }
     
@@ -989,7 +989,7 @@ class Client extends Base
     */
     public function setUseCURL($use)
     {
-        $this->_debug("setUseCURL($use)");
+        $this->debug("setUseCURL($use)");
         $this->useCurl = $use;
     }
 
@@ -1000,7 +1000,7 @@ class Client extends Base
     */
     public function useHTTPPersistentConnection()
     {
-        $this->_debug("useHTTPPersistentConnection");
+        $this->debug("useHTTPPersistentConnection");
         $this->persistentConnection = true;
     }
     
@@ -1014,11 +1014,11 @@ class Client extends Base
     public function getProxy()
     {
         $r = rand();
-        $evalStr = $this->_getProxyClassCode($r);
-        //$this->_debug("proxy class: $evalStr");
+        $evalStr = $this->getProxyClassCode($r);
+        //$this->debug("proxy class: $evalStr");
         if ($this->getError())
         {
-            $this->_debug("Error from _getProxyClassCode, so return NULL");
+            $this->debug("Error from _getProxyClassCode, so return NULL");
             return null;
         }
         // eval the class
@@ -1063,12 +1063,12 @@ class Client extends Base
     */
     protected function getProxyClassCode($r)
     {
-        $this->_debug("in getProxy endPointType=$this->endPointType");
+        $this->debug("in getProxy endPointType=$this->endPointType");
         $this->appendDebug("wsdl=" . $this->varDump($this->wsdl));
         if ($this->endPointType != 'wsdl')
         {
             $evalStr = 'A proxy can only be created for a WSDL client';
-            $this->_setError($evalStr);
+            $this->setError($evalStr);
             $evalStr = "echo \"$evalStr\";";
             return $evalStr;
         }
@@ -1133,7 +1133,7 @@ class Client extends Base
     public function getProxyClassCode()
     {
         $r = rand();
-        return $this->_getProxyClassCode($r);
+        return $this->getProxyClassCode($r);
     }
 
     /**
@@ -1227,7 +1227,7 @@ class Client extends Base
         if (sizeof($this->cookies) == 0) {
             return true;
         }
-        $this->_debug('checkCookie: check ' . sizeof($this->cookies) . ' cookies');
+        $this->debug('checkCookie: check ' . sizeof($this->cookies) . ' cookies');
         $curr_cookies = $this->cookies;
         $this->cookies = array();
         
@@ -1235,7 +1235,7 @@ class Client extends Base
         {
             if (! is_array($cookie))
             {
-                $this->_debug('Remove cookie that is not an array');
+                $this->debug('Remove cookie that is not an array');
                 continue;
             }
             if ((isset($cookie['expires'])) && (! empty($cookie['expires'])))
@@ -1246,7 +1246,7 @@ class Client extends Base
                 }
                 else
                 {
-                    $this->_debug('Remove expired cookie ' . $cookie['name']);
+                    $this->debug('Remove expired cookie ' . $cookie['name']);
                 }
             }
             else
@@ -1254,7 +1254,7 @@ class Client extends Base
                 $this->cookies[] = $cookie;
             }
         }
-        $this->_debug('checkCookie: '.sizeof($this->cookies).' cookies left in array');
+        $this->debug('checkCookie: '.sizeof($this->cookies).' cookies left in array');
         return true;
     }
 
@@ -1272,7 +1272,7 @@ class Client extends Base
             // no existing cookies: take whatever is new
             if (sizeof($cookies) > 0)
             {
-                $this->_debug('Setting new cookie(s)');
+                $this->debug('Setting new cookie(s)');
                 $this->cookies = $cookies;
             }
             return true;
@@ -1328,13 +1328,13 @@ class Client extends Base
                 }
                 $this->cookies[$i] = $newCookie;
                 $found = true;
-                $this->_debug('Update cookie ' . $newName . '=' . $newCookie['value']);
+                $this->debug('Update cookie ' . $newName . '=' . $newCookie['value']);
                 
                 break;
             }
             if (! $found)
             {
-                $this->_debug('Add cookie ' . $newName . '=' . $newCookie['value']);
+                $this->debug('Add cookie ' . $newName . '=' . $newCookie['value']);
                 $this->cookies[] = $newCookie;
             }
         }

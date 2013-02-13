@@ -330,7 +330,7 @@ class WSDL extends Base
         $useCurl = false)
     {
         parent::__construct();
-        $this->_debug("ctor wsdl=$wsdl timeout=$timeout responseTimeout=$responseTimeout");
+        $this->debug("ctor wsdl=$wsdl timeout=$timeout responseTimeout=$responseTimeout");
         $this->proxyHost = $proxyHost;
         $this->proxyPort = $proxyPort;
         $this->proxyUsername = $proxyUsername;
@@ -352,7 +352,7 @@ class WSDL extends Base
      */
     public function fetchWSDL($wsdl)
     {
-        $this->_debug("parse and process WSDL path=$wsdl");
+        $this->debug("parse and process WSDL path=$wsdl");
         $this->wsdl = $wsdl;
 
         $this->wsdlParts = parse_url($this->wsdl);
@@ -360,7 +360,7 @@ class WSDL extends Base
         // parse wsdl file
         if ($this->wsdl != "")
         {
-            $this->_parseWSDL($this->wsdl);
+            $this->parseWSDL($this->wsdl);
         }
         // imports
         // TODO: handle imports more properly, grabbing them in-line and nesting them
@@ -394,14 +394,14 @@ class WSDL extends Base
                                     }
                                     if (! in_array($url, $imported_urls))
                                     {
-                                        $this->_parseWSDL($url);
+                                        $this->parseWSDL($url);
                                         $imported++;
                                         $imported_urls[] = $url;
                                     }
                                 }
                                 else
                                 {
-                                    $this->_debug("Unexpected scenario: empty URL for unloaded import");
+                                    $this->debug("Unexpected scenario: empty URL for unloaded import");
                                 }
                             }
                         }
@@ -428,14 +428,14 @@ class WSDL extends Base
                             }
                             if (! in_array($url, $imported_urls))
                             {
-                                $this->_parseWSDL($url);
+                                $this->parseWSDL($url);
                                 $imported++;
                                 $imported_urls[] = $url;
                             }
                         }
                         else
                         {
-                            $this->_debug("Unexpected scenario: empty URL for unloaded import");
+                            $this->debug("Unexpected scenario: empty URL for unloaded import");
                         }
                     }
                 }
@@ -448,7 +448,7 @@ class WSDL extends Base
             {
                 foreach ($bindingData['operations'] as $operation => $data)
                 {
-                    $this->_debug('post-parse data gathering for ' . $operation);
+                    $this->debug('post-parse data gathering for ' . $operation);
                     
                     $this->bindings[$binding]['operations'][$operation]['input'] = 
                         isset($this->bindings[$binding]['operations'][$operation]['input']) ? 
@@ -492,11 +492,11 @@ class WSDL extends Base
      */
     protected function parseWSDL($wsdl = '')
     {
-        $this->_debug("parse WSDL at path=$wsdl");
+        $this->debug("parse WSDL at path=$wsdl");
 
         if ($wsdl == '')
         {
-            $this->_debug('no wsdl passed to _parseWSDL()!!');
+            $this->debug('no wsdl passed to _parseWSDL()!!');
             $this->setError('no wsdl passed to _parseWSDL()!!');
             return false;
         }
@@ -506,7 +506,7 @@ class WSDL extends Base
 
         if (isset($wsdl_props['scheme']) && ($wsdl_props['scheme'] == 'http' || $wsdl_props['scheme'] == 'https'))
         {
-            $this->_debug('getting WSDL http(s) URL ' . $wsdl);
+            $this->debug('getting WSDL http(s) URL ' . $wsdl);
             // get wsdl
             $tr = new TransportHTTP($wsdl, $this->curlOptions, $this->useCurl);
             $tr->request_method = 'GET';
@@ -524,22 +524,22 @@ class WSDL extends Base
             $tr->setEncoding('gzip, deflate');
             $wsdl_string = $tr->send('', $this->timeout, $this->responseTimeout);
             
-            //$this->_debug("WSDL request\n" . $tr->outgoing_payload);
-            //$this->_debug("WSDL response\n" . $tr->incoming_payload);
+            //$this->debug("WSDL request\n" . $tr->outgoing_payload);
+            //$this->debug("WSDL response\n" . $tr->incoming_payload);
             
             $this->appendDebug($tr->getDebug());
             // catch errors
             if ($err = $tr->getError() )
             {
                 $errstr = 'Getting ' . $wsdl . ' - HTTP ERROR: '.$err;
-                $this->_debug($errstr);
+                $this->debug($errstr);
                 $this->setError($errstr);
                 unset($tr);
                 return false;
             }
             
             unset($tr);
-            $this->_debug("got WSDL URL");
+            $this->debug("got WSDL URL");
         }
         else
         {
@@ -553,7 +553,7 @@ class WSDL extends Base
                 $path = $wsdl;
             }
             
-            $this->_debug('getting WSDL file ' . $path);
+            $this->debug('getting WSDL file ' . $path);
             
             if ($fp = @fopen($path, 'r'))
             {
@@ -567,12 +567,12 @@ class WSDL extends Base
             else
             {
                 $errstr = "Bad path to WSDL file $path";
-                $this->_debug($errstr);
+                $this->debug($errstr);
                 $this->setError($errstr);
                 return false;
             } 
         }
-        $this->_debug('Parse WSDL');
+        $this->debug('Parse WSDL');
         // end new code added
         // Create an XML parser.
         $this->parser = xml_parser_create(); 
@@ -594,14 +594,14 @@ class WSDL extends Base
                 xml_get_current_line_number($this->parser),
                 xml_error_string(xml_get_error_code($this->parser))
                 );
-            $this->_debug($errstr);
-            $this->_debug("XML payload:\n" . $wsdl_string);
+            $this->debug($errstr);
+            $this->debug("XML payload:\n" . $wsdl_string);
             $this->setError($errstr);
             return false;
         } 
         // free the parser
         xml_parser_free($this->parser);
-        $this->_debug('Parsing WSDL done');
+        $this->debug('Parsing WSDL done');
         // catch wsdl parse errors
         if ($this->getError())
         {
@@ -628,8 +628,8 @@ class WSDL extends Base
         }
         else if (preg_match('/schema$/', $name))
         {
-            $this->_debug('Parsing WSDL schema');
-            // $this->_debug("startElement for $name ($attrs[name]). status = $this->status (".$this->getLocalPart($name).")");
+            $this->debug('Parsing WSDL schema');
+            // $this->debug("startElement for $name ($attrs[name]). status = $this->status (".$this->getLocalPart($name).")");
             $this->status = 'schema';
             $this->currentSchema = new XMLSchema('', '', $this->namespaces);
             $this->currentSchema->schemaStartElement($parser, $name, $attrs);
@@ -702,12 +702,12 @@ class WSDL extends Base
                     {
                         if (isset($attrs['type']))
                         {
-                            $this->_debug("msg " . $this->currentMessage . ": found part (with type) $attrs[name]: " . implode(',', $attrs));
+                            $this->debug("msg " . $this->currentMessage . ": found part (with type) $attrs[name]: " . implode(',', $attrs));
                             $this->messages[$this->currentMessage][$attrs['name']] = $attrs['type'];
                         } 
                         if (isset($attrs['element']))
                         {
-                            $this->_debug("msg " . $this->currentMessage . ": found part (with element) $attrs[name]: " . implode(',', $attrs));
+                            $this->debug("msg " . $this->currentMessage . ": found part (with element) $attrs[name]: " . implode(',', $attrs));
                             $this->messages[$this->currentMessage][$attrs['name']] = $attrs['element'] . '^';
                         } 
                     } 
@@ -718,7 +718,7 @@ class WSDL extends Base
                     {
                         case 'operation':
                             $this->currentPortOperation = $attrs['name'];
-                            $this->_debug("portType $this->currentPortType operation: $this->currentPortOperation");
+                            $this->debug("portType $this->currentPortType operation: $this->currentPortOperation");
                             if (isset($attrs['parameterOrder']))
                             {
                                 $this->portTypes[$this->currentPortType][$attrs['name']]['parameterOrder'] = $attrs['parameterOrder'];
@@ -762,7 +762,7 @@ class WSDL extends Base
                             } 
                             if (isset($attrs['name'])) {
                                 $this->currentOperation = $attrs['name'];
-                                $this->_debug("current binding operation: $this->currentOperation");
+                                $this->debug("current binding operation: $this->currentOperation");
                                 $this->bindings[$this->currentBinding]['operations'][$this->currentOperation]['name'] = $attrs['name'];
                                 $this->bindings[$this->currentBinding]['operations'][$this->currentOperation]['binding'] = $this->currentBinding;
                                 $this->bindings[$this->currentBinding]['operations'][$this->currentOperation]['endpoint'] = isset($this->bindings[$this->currentBinding]['endpoint']) ? $this->bindings[$this->currentBinding]['endpoint'] : '';
@@ -795,7 +795,7 @@ class WSDL extends Base
                     {
                         case 'port':
                             $this->currentPort = $attrs['name'];
-                            $this->_debug('current port: ' . $this->currentPort);
+                            $this->debug('current port: ' . $this->currentPort);
                             $this->ports[$this->currentPort]['binding'] = $this->getLocalPart($attrs['binding']);
                     
                             break;
@@ -816,7 +816,7 @@ class WSDL extends Base
                 if (isset($attrs['location']))
                 {
                     $this->import[$attrs['namespace']][] = array('location' => $attrs['location'], 'loaded' => false);
-                    $this->_debug('parsing import ' . $attrs['namespace']. ' - ' . $attrs['location'] . ' (' . count($this->import[$attrs['namespace']]).')');
+                    $this->debug('parsing import ' . $attrs['namespace']. ' - ' . $attrs['location'] . ' (' . count($this->import[$attrs['namespace']]).')');
                 }
                 else
                 {
@@ -824,7 +824,7 @@ class WSDL extends Base
                     if (! $this->getPrefixFromNamespace($attrs['namespace'])) {
                         $this->namespaces['ns'.(count($this->namespaces)+1)] = $attrs['namespace'];
                     }
-                    $this->_debug('parsing import ' . $attrs['namespace']. ' - [no location] (' . count($this->import[$attrs['namespace']]).')');
+                    $this->debug('parsing import ' . $attrs['namespace']. ' - [no location] (' . count($this->import[$attrs['namespace']]).')');
                 }
                 break;
             //wait for schema
@@ -857,14 +857,14 @@ class WSDL extends Base
                     } 
                     $this->status = 'binding';
                     $this->bindings[$this->currentBinding]['portType'] = $this->getLocalPart($attrs['type']);
-                    $this->_debug("current binding: $this->currentBinding of portType: " . $attrs['type']);
+                    $this->debug("current binding: $this->currentBinding of portType: " . $attrs['type']);
                 } 
                 break;
             
             case 'service':
                 $this->serviceName = $attrs['name'];
                 $this->status = 'service';
-                $this->_debug('current service: ' . $this->serviceName);
+                $this->debug('current service: ' . $this->serviceName);
                 break;
             
             case 'definitions':
@@ -892,7 +892,7 @@ class WSDL extends Base
             $this->appendDebug($this->currentSchema->getDebug());
             $this->currentSchema->clearDebug();
             $this->schemas[$this->currentSchema->schemaTargetNamespace][] = $this->currentSchema;
-            $this->_debug('Parsing WSDL schema done');
+            $this->debug('Parsing WSDL schema done');
         } 
         
         if ($this->status == 'schema')
@@ -943,7 +943,7 @@ class WSDL extends Base
     */
     public function setCredentials($username, $password, $authType = 'basic', $certRequest = array())
     {
-        $this->_debug("setCredentials username=$username authType=$authType certRequest=");
+        $this->debug("setCredentials username=$username authType=$authType certRequest=");
         $this->appendDebug($this->varDump($certRequest));
         $this->username = $username;
         $this->password = $password;
@@ -985,23 +985,23 @@ class WSDL extends Base
         }
         else
         {
-            $this->_debug("getOperations bindingType $bindingType may not be supported");
+            $this->debug("getOperations bindingType $bindingType may not be supported");
         }
         
-        $this->_debug("getOperations for port '$portName' bindingType $bindingType");
+        $this->debug("getOperations for port '$portName' bindingType $bindingType");
         
         // loop thru ports
         foreach ($this->ports as $port => $portData)
         {
-            $this->_debug("getOperations checking port $port bindingType " . $portData['bindingType']);
+            $this->debug("getOperations checking port $port bindingType " . $portData['bindingType']);
             if ($portName == '' || $port == $portName)
             {
                 // binding type of port matches parameter
                 if ($portData['bindingType'] == $bindingType)
                 {
-                    $this->_debug("getOperations found port $port bindingType $bindingType");
-                    //$this->_debug("port data: " . $this->varDump($portData));
-                    //$this->_debug("bindings: " . $this->varDump($this->bindings[ $portData['binding'] ]));
+                    $this->debug("getOperations found port $port bindingType $bindingType");
+                    //$this->debug("port data: " . $this->varDump($portData));
+                    //$this->debug("bindings: " . $this->varDump($this->bindings[ $portData['binding'] ]));
                     // merge bindings
                     if (isset($this->bindings[ $portData['binding'] ]['operations']))
                     {
@@ -1012,7 +1012,7 @@ class WSDL extends Base
         }
         if (count($ops) == 0)
         {
-            $this->_debug("getOperations found no operations for port '$portName' bindingType $bindingType");
+            $this->debug("getOperations found no operations for port '$portName' bindingType $bindingType");
         }
         return $ops;
     } 
@@ -1113,11 +1113,11 @@ class WSDL extends Base
     */
     public function getTypeDef($type, $ns)
     {
-        $this->_debug("in getTypeDef: type=$type, ns=$ns");
+        $this->debug("in getTypeDef: type=$type, ns=$ns");
         if ((! $ns) && isset($this->namespaces['tns']))
         {
             $ns = $this->namespaces['tns'];
-            $this->_debug("in getTypeDef: type namespace forced to $ns");
+            $this->debug("in getTypeDef: type namespace forced to $ns");
         }
         if (!isset($this->schemas[$ns]))
         {
@@ -1125,7 +1125,7 @@ class WSDL extends Base
             {
                 if (strcasecmp($ns, $ns0) == 0)
                 {
-                    $this->_debug("in getTypeDef: replacing schema namespace $ns with $ns0");
+                    $this->debug("in getTypeDef: replacing schema namespace $ns with $ns0");
                     $ns = $ns0;
                     break;
                 }
@@ -1133,7 +1133,7 @@ class WSDL extends Base
         }
         if (isset($this->schemas[$ns]))
         {
-            $this->_debug("in getTypeDef: have schema for namespace $ns");
+            $this->debug("in getTypeDef: have schema for namespace $ns");
             for ($i = 0; $i < count($this->schemas[$ns]); $i++)
             {
                 $xs = &$this->schemas[$ns][$i];
@@ -1142,7 +1142,7 @@ class WSDL extends Base
                 $xs->clearDebug();
                 if ($t)
                 {
-                    $this->_debug("in getTypeDef: found type $type");
+                    $this->debug("in getTypeDef: found type $type");
                     if (!isset($t['phpType']))
                     {
                         // get info for type to tack onto the element
@@ -1151,8 +1151,8 @@ class WSDL extends Base
                         $etype = $this->getTypeDef($uqType, $ns);
                         if ($etype)
                         {
-                            $this->_debug("found type for [element] $type:");
-                            $this->_debug($this->varDump($etype));
+                            $this->debug("found type for [element] $type:");
+                            $this->debug($this->varDump($etype));
                             if (isset($etype['phpType']))
                             {
                                 $t['phpType'] = $etype['phpType'];
@@ -1168,17 +1168,17 @@ class WSDL extends Base
                         }
                         else
                         {
-                            $this->_debug("did not find type for [element] $type");
+                            $this->debug("did not find type for [element] $type");
                         }
                     }
                     return $t;
                 }
             }
-            $this->_debug("in getTypeDef: did not find type $type");
+            $this->debug("in getTypeDef: did not find type $type");
         }
         else
         {
-            $this->_debug("in getTypeDef: do not have schema for namespace $ns");
+            $this->debug("in getTypeDef: do not have schema for namespace $ns");
         }
         return false;
     }
@@ -1516,7 +1516,7 @@ class WSDL extends Base
      */
     protected function parametersMatchWrapped($type, &$parameters)
     {
-        $this->_debug("in _parametersMatchWrapped type=$type, parameters=");
+        $this->debug("in _parametersMatchWrapped type=$type, parameters=");
         $this->appendDebug($this->varDump($parameters));
 
         // split type into namespace:unqualified-type
@@ -1524,18 +1524,18 @@ class WSDL extends Base
         {
             $uqType = substr($type, strrpos($type, ':') + 1);
             $ns = substr($type, 0, strrpos($type, ':'));
-            $this->_debug("in _parametersMatchWrapped: got a prefixed type: $uqType, $ns");
+            $this->debug("in _parametersMatchWrapped: got a prefixed type: $uqType, $ns");
             if ($this->getNamespaceFromPrefix($ns))
             {
                 $ns = $this->getNamespaceFromPrefix($ns);
-                $this->_debug("in _parametersMatchWrapped: expanded prefixed type: $uqType, $ns");
+                $this->debug("in _parametersMatchWrapped: expanded prefixed type: $uqType, $ns");
             }
         }
         else
         {
             // TODO: should the type be compared to types in XSD, and the namespace
             // set to XSD if the type matches?
-            $this->_debug("in _parametersMatchWrapped: No namespace for type $type");
+            $this->debug("in _parametersMatchWrapped: No namespace for type $type");
             $ns = '';
             $uqType = $type;
         }
@@ -1543,11 +1543,11 @@ class WSDL extends Base
         // get the type information
         if (!$typeDef = $this->getTypeDef($uqType, $ns))
         {
-            $this->_debug("in _parametersMatchWrapped: $type ($uqType) is not a supported type.");
+            $this->debug("in _parametersMatchWrapped: $type ($uqType) is not a supported type.");
             return false;
         }
         
-        $this->_debug("in _parametersMatchWrapped: found typeDef=");
+        $this->debug("in _parametersMatchWrapped: found typeDef=");
         $this->appendDebug($this->varDump($typeDef));
         
         if (substr($uqType, -1) == '^')
@@ -1557,12 +1557,12 @@ class WSDL extends Base
         
         $phpType = $typeDef['phpType'];
         $arrayType = (isset($typeDef['arrayType']) ? $typeDef['arrayType'] : '');
-        $this->_debug("in _parametersMatchWrapped: uqType: $uqType, ns: $ns, phptype: $phpType, arrayType: $arrayType");
+        $this->debug("in _parametersMatchWrapped: uqType: $uqType, ns: $ns, phptype: $phpType, arrayType: $arrayType");
         
         // we expect a complexType or element of complexType
         if ($phpType != 'struct')
         {
-            $this->_debug("in _parametersMatchWrapped: not a struct");
+            $this->debug("in _parametersMatchWrapped: not a struct");
             return false;
         }
 
@@ -1575,17 +1575,17 @@ class WSDL extends Base
             {
                 if (isset($parameters[$name]))
                 {
-                    $this->_debug("in _parametersMatchWrapped: have parameter named $name");
+                    $this->debug("in _parametersMatchWrapped: have parameter named $name");
                     $matches++;
                 }
                 else
                 {
-                    $this->_debug("in _parametersMatchWrapped: do not have parameter named $name");
+                    $this->debug("in _parametersMatchWrapped: do not have parameter named $name");
                 }
                 $elements++;
             }
 
-            $this->_debug("in _parametersMatchWrapped: $matches parameter names match $elements wrapped parameter names");
+            $this->debug("in _parametersMatchWrapped: $matches parameter names match $elements wrapped parameter names");
             if ($matches == 0)
             {
                 return false;
@@ -1595,7 +1595,7 @@ class WSDL extends Base
 
         // since there are no elements for the type, if the user passed no
         // parameters, the parameters match wrapped.
-        $this->_debug("in _parametersMatchWrapped: no elements type $ns:$uqType");
+        $this->debug("in _parametersMatchWrapped: no elements type $ns:$uqType");
         return count($parameters) == 0;
     }
 
@@ -1616,24 +1616,24 @@ class WSDL extends Base
      */
     public function serializeRPCParameters($operation, $direction, $parameters, $bindingType = 'soap')
     {
-        $this->_debug("in serializeRPCParameters: operation=$operation, direction=$direction, XMLSchemaVersion=$this->XMLSchemaVersion, bindingType=$bindingType");
+        $this->debug("in serializeRPCParameters: operation=$operation, direction=$direction, XMLSchemaVersion=$this->XMLSchemaVersion, bindingType=$bindingType");
         $this->appendDebug('parameters=' . $this->varDump($parameters));
         
         if ($direction != 'input' && $direction != 'output')
         {
-            $this->_debug('The value of the \$direction argument needs to be either "input" or "output"');
+            $this->debug('The value of the \$direction argument needs to be either "input" or "output"');
             $this->setError('The value of the \$direction argument needs to be either "input" or "output"');
             return false;
         } 
         
         if (!$opData = $this->getOperationData($operation, $bindingType))
         {
-            $this->_debug('Unable to retrieve WSDL data for operation: ' . $operation . ' bindingType: ' . $bindingType);
+            $this->debug('Unable to retrieve WSDL data for operation: ' . $operation . ' bindingType: ' . $bindingType);
             $this->setError('Unable to retrieve WSDL data for operation: ' . $operation . ' bindingType: ' . $bindingType);
             return false;
         }
         
-        $this->_debug('in serializeRPCParameters: opData:');
+        $this->debug('in serializeRPCParameters: opData:');
         $this->appendDebug($this->varDump($opData));
 
         // Get encoding style for output and set to current
@@ -1652,30 +1652,30 @@ class WSDL extends Base
             $part_count = sizeof($parts);
             $style = $opData['style'];
             $use = $opData[$direction]['use'];
-            $this->_debug("have $part_count part(s) to serialize using $style/$use");
+            $this->debug("have $part_count part(s) to serialize using $style/$use");
             if (is_array($parameters))
             {
                 $parametersArrayType = $this->isArraySimpleOrStruct($parameters);
                 $parameter_count = count($parameters);
-                $this->_debug("have $parameter_count parameter(s) provided as $parametersArrayType to serialize");
+                $this->debug("have $parameter_count parameter(s) provided as $parametersArrayType to serialize");
                 // check for Microsoft-style wrapped parameters
                 if ($style == 'document' && $use == 'literal' && $part_count == 1 && isset($parts['parameters']))
                 {
-                    $this->_debug('check whether the caller has wrapped the parameters');
+                    $this->debug('check whether the caller has wrapped the parameters');
                     if ($direction == 'output' && $parametersArrayType == 'arraySimple' && $parameter_count == 1)
                     {
                         // TODO: consider checking here for double-wrapping, when
                         // service function wraps, then NuSOAP wraps again
-                        $this->_debug("change simple array to associative with 'parameters' element");
+                        $this->debug("change simple array to associative with 'parameters' element");
                         $parameters['parameters'] = $parameters[0];
                         unset($parameters[0]);
                     }
                     if (($parametersArrayType == 'arrayStruct' || $parameter_count == 0) && !isset($parameters['parameters']))
                     {
-                        $this->_debug('check whether caller\'s parameters match the wrapped ones');
-                        if ($this->_parametersMatchWrapped($parts['parameters'], $parameters))
+                        $this->debug('check whether caller\'s parameters match the wrapped ones');
+                        if ($this->parametersMatchWrapped($parts['parameters'], $parameters))
                         {
-                            $this->_debug('wrap the parameters for the caller');
+                            $this->debug('wrap the parameters for the caller');
                             $parameters = array('parameters' => $parameters);
                             $parameter_count = 1;
                         }
@@ -1683,7 +1683,7 @@ class WSDL extends Base
                 }
                 foreach ($parts as $name => $type)
                 {
-                    $this->_debug("serializing part $name of type $type");
+                    $this->debug("serializing part $name of type $type");
                     // Track encoding style
                     if (isset($opData[$direction]['encodingStyle']) && $encodingStyle != $opData[$direction]['encodingStyle'])
                     {
@@ -1700,29 +1700,29 @@ class WSDL extends Base
                     if ($parametersArrayType == 'arraySimple')
                     {
                         $p = array_shift($parameters);
-                        $this->_debug('calling _serializeType w/indexed param');
-                        $xml .= $this->_serializeType($name, $type, $p, $use, $enc_style);
+                        $this->debug('calling _serializeType w/indexed param');
+                        $xml .= $this->serializeType($name, $type, $p, $use, $enc_style);
                     }
                     else if (isset($parameters[$name]))
                     {
-                        $this->_debug('calling _serializeType w/named param');
-                        $xml .= $this->_serializeType($name, $type, $parameters[$name], $use, $enc_style);
+                        $this->debug('calling _serializeType w/named param');
+                        $xml .= $this->serializeType($name, $type, $parameters[$name], $use, $enc_style);
                     }
                     else
                     {
                         // TODO: only send nillable
-                        $this->_debug('calling _serializeType w/null param');
-                        $xml .= $this->_serializeType($name, $type, null, $use, $enc_style);
+                        $this->debug('calling _serializeType w/null param');
+                        $xml .= $this->serializeType($name, $type, null, $use, $enc_style);
                     }
                 }
             }
             else
             {
-                $this->_debug('no parameters passed.');
+                $this->debug('no parameters passed.');
             }
         }
 
-        $this->_debug("serializeRPCParameters returning: $xml");
+        $this->debug("serializeRPCParameters returning: $xml");
         return $xml;
     } 
     
@@ -1742,22 +1742,22 @@ class WSDL extends Base
      */
     // function serializeParameters($operation, $direction, $parameters)
     // {
-    //     $this->_debug("in serializeParameters: operation=$operation, direction=$direction, XMLSchemaVersion=$this->XMLSchemaVersion"); 
+    //     $this->debug("in serializeParameters: operation=$operation, direction=$direction, XMLSchemaVersion=$this->XMLSchemaVersion"); 
     //     $this->appendDebug('parameters=' . $this->varDump($parameters));
         
     //     if ($direction != 'input' && $direction != 'output')
     //     {
-    //         $this->_debug('The value of the \$direction argument needs to be either "input" or "output"');
+    //         $this->debug('The value of the \$direction argument needs to be either "input" or "output"');
     //         $this->setError('The value of the \$direction argument needs to be either "input" or "output"');
     //         return false;
     //     } 
     //     if (!$opData = $this->getOperationData($operation))
     //     {
-    //         $this->_debug('Unable to retrieve WSDL data for operation: ' . $operation);
+    //         $this->debug('Unable to retrieve WSDL data for operation: ' . $operation);
     //         $this->setError('Unable to retrieve WSDL data for operation: ' . $operation);
     //         return false;
     //     }
-    //     $this->_debug('opData:');
+    //     $this->debug('opData:');
     //     $this->appendDebug($this->varDump($opData));
         
     //     // Get encoding style for output and set to current
@@ -1774,15 +1774,15 @@ class WSDL extends Base
     //     {
             
     //         $use = $opData[$direction]['use'];
-    //         $this->_debug("use=$use");
-    //         $this->_debug('got ' . count($opData[$direction]['parts']) . ' part(s)');
+    //         $this->debug("use=$use");
+    //         $this->debug('got ' . count($opData[$direction]['parts']) . ' part(s)');
     //         if (is_array($parameters))
     //         {
     //             $parametersArrayType = $this->isArraySimpleOrStruct($parameters);
-    //             $this->_debug('have ' . $parametersArrayType . ' parameters');
+    //             $this->debug('have ' . $parametersArrayType . ' parameters');
     //             foreach ($opData[$direction]['parts'] as $name => $type)
     //             {
-    //                 $this->_debug('serializing part "'.$name.'" of type "'.$type.'"');
+    //                 $this->debug('serializing part "'.$name.'" of type "'.$type.'"');
     //                 // Track encoding style
     //                 if (isset($opData[$direction]['encodingStyle']) && $encodingStyle != $opData[$direction]['encodingStyle'])
     //                 {
@@ -1799,28 +1799,28 @@ class WSDL extends Base
     //                 if ($parametersArrayType == 'arraySimple')
     //                 {
     //                     $p = array_shift($parameters);
-    //                     $this->_debug('calling _serializeType w/indexed param');
-    //                     $xml .= $this->_serializeType($name, $type, $p, $use, $enc_style);
+    //                     $this->debug('calling _serializeType w/indexed param');
+    //                     $xml .= $this->serializeType($name, $type, $p, $use, $enc_style);
     //                 }
     //                 else if (isset($parameters[$name]))
     //                 {
-    //                     $this->_debug('calling _serializeType w/named param');
-    //                     $xml .= $this->_serializeType($name, $type, $parameters[$name], $use, $enc_style);
+    //                     $this->debug('calling _serializeType w/named param');
+    //                     $xml .= $this->serializeType($name, $type, $parameters[$name], $use, $enc_style);
     //                 }
     //                 else
     //                 {
     //                     // TODO: only send nillable
-    //                     $this->_debug('calling _serializeType w/null param');
-    //                     $xml .= $this->_serializeType($name, $type, null, $use, $enc_style);
+    //                     $this->debug('calling _serializeType w/null param');
+    //                     $xml .= $this->serializeType($name, $type, null, $use, $enc_style);
     //                 }
     //             }
     //         }
     //         else
     //         {
-    //             $this->_debug('no parameters passed.');
+    //             $this->debug('no parameters passed.');
     //         }
     //     }
-    //     $this->_debug("serializeParameters returning: $xml");
+    //     $this->debug("serializeParameters returning: $xml");
     //     return $xml;
     // }
     
@@ -1844,7 +1844,7 @@ class WSDL extends Base
         $encodingStyle = false,
         $unqualified = false)
     {
-        $this->_debug("in _serializeType: name=$name, type=$type, use=$use, encodingStyle=$encodingStyle, unqualified=" . ($unqualified ? "unqualified" : "qualified"));
+        $this->debug("in _serializeType: name=$name, type=$type, use=$use, encodingStyle=$encodingStyle, unqualified=" . ($unqualified ? "unqualified" : "qualified"));
         $this->appendDebug("value=" . $this->varDump($value));
         
         if ($use == 'encoded' && $encodingStyle)
@@ -1859,22 +1859,22 @@ class WSDL extends Base
             {
                 $type = $value->type_ns . ':' . $value->type;
                 $forceType = true;
-                $this->_debug("in _serializeType: soapval overrides type to $type");
+                $this->debug("in _serializeType: soapval overrides type to $type");
             }
             else if ($value->type)
             {
                 $type = $value->type;
                 $forceType = true;
-                $this->_debug("in _serializeType: soapval overrides type to $type");
+                $this->debug("in _serializeType: soapval overrides type to $type");
             }
             else
             {
                 $forceType = false;
-                $this->_debug("in _serializeType: soapval does not override type");
+                $this->debug("in _serializeType: soapval does not override type");
             }
             $attrs = $value->attributes;
             $value = $value->value;
-            $this->_debug("in _serializeType: soapval overrides value to $value");
+            $this->debug("in _serializeType: soapval overrides value to $value");
             if ($attrs)
             {
                 if (!is_array($value))
@@ -1885,7 +1885,7 @@ class WSDL extends Base
                 {
                     $value['!' . $n] = $v;
                 }
-                $this->_debug("in _serializeType: soapval provides attributes");
+                $this->debug("in _serializeType: soapval provides attributes");
             }
         }
         else
@@ -1898,16 +1898,16 @@ class WSDL extends Base
         {
             $uqType = substr($type, strrpos($type, ':') + 1);
             $ns = substr($type, 0, strrpos($type, ':'));
-            $this->_debug("in _serializeType: got a prefixed type: $uqType, $ns");
+            $this->debug("in _serializeType: got a prefixed type: $uqType, $ns");
             if ($this->getNamespaceFromPrefix($ns))
             {
                 $ns = $this->getNamespaceFromPrefix($ns);
-                $this->_debug("in _serializeType: expanded prefixed type: $uqType, $ns");
+                $this->debug("in _serializeType: expanded prefixed type: $uqType, $ns");
             }
 
             if ($ns == $this->XMLSchemaVersion || $ns == 'http://schemas.xmlsoap.org/soap/encoding/')
             {
-                $this->_debug('in _serializeType: type namespace indicates XML Schema or SOAP Encoding type');
+                $this->debug('in _serializeType: type namespace indicates XML Schema or SOAP Encoding type');
                 if ($unqualified && $use == 'literal')
                 {
                     $elementNS = " xmlns=\"\"";
@@ -1929,7 +1929,7 @@ class WSDL extends Base
                         // TODO: depends on nillable, which should be checked before calling this method
                         $xml = "<$name$elementNS xsi:nil=\"true\" xsi:type=\"" . $this->getPrefixFromNamespace($ns) . ":$uqType\"/>";
                     }
-                    $this->_debug("in _serializeType: returning: $xml");
+                    $this->debug("in _serializeType: returning: $xml");
                     return $xml;
                 }
                 
@@ -1981,20 +1981,20 @@ class WSDL extends Base
                     {
                         $xml = "<$name$elementNS xsi:type=\"" . $this->getPrefixFromNamespace($ns) . ":$uqType\"$encodingStyle>$value</$name>";
                     }
-                    $this->_debug("in _serializeType: returning: $xml");
+                    $this->debug("in _serializeType: returning: $xml");
                     return $xml;
                 }
-                $this->_debug('custom type extends XML Schema or SOAP Encoding namespace (yuck)');
+                $this->debug('custom type extends XML Schema or SOAP Encoding namespace (yuck)');
             }
             else if ($ns == 'http://xml.apache.org/xml-soap')
             {
-                $this->_debug('in _serializeType: appears to be Apache SOAP type');
+                $this->debug('in _serializeType: appears to be Apache SOAP type');
                 if ($uqType == 'Map')
                 {
                     $tt_prefix = $this->getPrefixFromNamespace('http://xml.apache.org/xml-soap');
                     if (! $tt_prefix)
                     {
-                        $this->_debug('in _serializeType: Add namespace for Apache SOAP type');
+                        $this->debug('in _serializeType: Add namespace for Apache SOAP type');
                         $tt_prefix = 'ns' . rand(1000, 9999);
                         $this->namespaces[$tt_prefix] = 'http://xml.apache.org/xml-soap';
                         // force this to be added to usedNamespaces
@@ -2003,7 +2003,7 @@ class WSDL extends Base
                     $contents = '';
                     foreach ($value as $k => $v)
                     {
-                        $this->_debug("serializing map element: key $k, value $v");
+                        $this->debug("serializing map element: key $k, value $v");
                         $contents .= '<item>';
                         $contents .= $this->serializeVal($k,'key',false,false,false,false,$use);
                         $contents .= $this->serializeVal($v,'value',false,false,false,false,$use);
@@ -2024,17 +2024,17 @@ class WSDL extends Base
                     {
                         $xml = "<$name xsi:type=\"" . $tt_prefix . ":$uqType\"$encodingStyle>$contents</$name>";
                     }
-                    $this->_debug("in _serializeType: returning: $xml");
+                    $this->debug("in _serializeType: returning: $xml");
                     return $xml;
                 }
-                $this->_debug('in _serializeType: Apache SOAP type, but only support Map');
+                $this->debug('in _serializeType: Apache SOAP type, but only support Map');
             }
         }
         else
         {
             // TODO: should the type be compared to types in XSD, and the namespace
             // set to XSD if the type matches?
-            $this->_debug("in _serializeType: No namespace for type $type");
+            $this->debug("in _serializeType: No namespace for type $type");
             $ns = '';
             $uqType = $type;
         }
@@ -2042,12 +2042,12 @@ class WSDL extends Base
         if (!$typeDef = $this->getTypeDef($uqType, $ns))
         {
             $this->setError("$type ($uqType) is not a supported type.");
-            $this->_debug("in _serializeType: $type ($uqType) is not a supported type.");
+            $this->debug("in _serializeType: $type ($uqType) is not a supported type.");
             return false;
         }
         else
         {
-            $this->_debug("in _serializeType: found typeDef");
+            $this->debug("in _serializeType: found typeDef");
             $this->appendDebug('typeDef=' . $this->varDump($typeDef));
             if (substr($uqType, -1) == '^') {
                 $uqType = substr($uqType, 0, -1);
@@ -2057,11 +2057,11 @@ class WSDL extends Base
         if (!isset($typeDef['phpType']))
         {
             $this->setError("$type ($uqType) has no phpType.");
-            $this->_debug("in _serializeType: $type ($uqType) has no phpType.");
+            $this->debug("in _serializeType: $type ($uqType) has no phpType.");
             return false;
         }
         $phpType = $typeDef['phpType'];
-        $this->_debug("in _serializeType: uqType: $uqType, ns: $ns, phptype: $phpType, arrayType: " . (isset($typeDef['arrayType']) ? $typeDef['arrayType'] : '') ); 
+        $this->debug("in _serializeType: uqType: $uqType, ns: $ns, phptype: $phpType, arrayType: " . (isset($typeDef['arrayType']) ? $typeDef['arrayType'] : '') ); 
         
         // if php type == struct, map value to the <all> element names
         
@@ -2102,7 +2102,7 @@ class WSDL extends Base
                 {
                     $xml = "<$elementName$elementNS xsi:nil=\"true\" xsi:type=\"" . $this->getPrefixFromNamespace($ns) . ":$uqType\"/>";
                 }
-                $this->_debug("in _serializeType: returning: $xml");
+                $this->debug("in _serializeType: returning: $xml");
                 return $xml;
             }
             if (is_object($value))
@@ -2111,7 +2111,7 @@ class WSDL extends Base
             }
             if (is_array($value))
             {
-                $elementAttrs = $this->_serializeComplexTypeAttributes($typeDef, $value, $ns, $uqType);
+                $elementAttrs = $this->serializeComplexTypeAttributes($typeDef, $value, $ns, $uqType);
                 if ($use == 'literal')
                 {
                     if ($forceType)
@@ -2133,23 +2133,23 @@ class WSDL extends Base
                     if (isset($value['!']))
                     {
                         $xml .= $value['!'];
-                        $this->_debug("in _serializeType: serialized simpleContent for type $type");
+                        $this->debug("in _serializeType: serialized simpleContent for type $type");
                     }
                     else
                     {
-                        $this->_debug("in _serializeType: no simpleContent to serialize for type $type");
+                        $this->debug("in _serializeType: no simpleContent to serialize for type $type");
                     }
                 }
                 else
                 {
                     // complexContent
-                    $xml .= $this->_serializeComplexTypeElements($typeDef, $value, $ns, $uqType, $use, $encodingStyle);
+                    $xml .= $this->serializeComplexTypeElements($typeDef, $value, $ns, $uqType, $use, $encodingStyle);
                 }
                 $xml .= "</$elementName>";
             }
             else
             {
-                $this->_debug("in _serializeType: phpType is struct, but value is not an array");
+                $this->debug("in _serializeType: phpType is struct, but value is not an array");
                 $this->setError("phpType is struct, but value is not an array: see debug output for details");
                 $xml = '';
             }
@@ -2189,7 +2189,7 @@ class WSDL extends Base
                         ':' .
                         $this->getLocalPart($typeDef['arrayType'])."[0]\"/>";
                 }
-                $this->_debug("in _serializeType: returning: $xml");
+                $this->debug("in _serializeType: returning: $xml");
                 return $xml;
             }
             if (isset($typeDef['multidimensional']))
@@ -2212,11 +2212,11 @@ class WSDL extends Base
                 $contents = '';
                 foreach ($value as $k => $v)
                 {
-                    $this->_debug("serializing array element: $k, $v of type: $typeDef[arrayType]");
+                    $this->debug("serializing array element: $k, $v of type: $typeDef[arrayType]");
                     //if (strpos($typeDef['arrayType'], ':') ) {
                     if (!in_array($typeDef['arrayType'],$this->typemap['http://www.w3.org/2001/XMLSchema']))
                     {
-                        $contents .= $this->_serializeType('item', $typeDef['arrayType'], $v, $use);
+                        $contents .= $this->serializeType('item', $typeDef['arrayType'], $v, $use);
                     }
                     else
                     {
@@ -2281,7 +2281,7 @@ class WSDL extends Base
                 $xml = "<$name$elementNS xsi:type=\"" . $this->getPrefixFromNamespace($ns) . ":$uqType\"$encodingStyle>$value</$name>";
             }
         }
-        $this->_debug("in _serializeType: returning: $xml");
+        $this->debug("in _serializeType: returning: $xml");
         return $xml;
     }
     
@@ -2297,7 +2297,7 @@ class WSDL extends Base
      */
     protected function serializeComplexTypeAttributes($typeDef, $value, $ns, $uqType)
     {
-        $this->_debug("_serializeComplexTypeAttributes for XML Schema type $ns:$uqType");
+        $this->debug("_serializeComplexTypeAttributes for XML Schema type $ns:$uqType");
         $xml = '';
         if (isset($typeDef['extensionBase']))
         {
@@ -2309,17 +2309,17 @@ class WSDL extends Base
             }
             if ($typeDefx = $this->getTypeDef($uqTypex, $nsx))
             {
-                $this->_debug("serialize attributes for extension base $nsx:$uqTypex");
-                $xml .= $this->_serializeComplexTypeAttributes($typeDefx, $value, $nsx, $uqTypex);
+                $this->debug("serialize attributes for extension base $nsx:$uqTypex");
+                $xml .= $this->serializeComplexTypeAttributes($typeDefx, $value, $nsx, $uqTypex);
             }
             else
             {
-                $this->_debug("extension base $nsx:$uqTypex is not a supported type");
+                $this->debug("extension base $nsx:$uqTypex is not a supported type");
             }
         }
         if (isset($typeDef['attrs']) && is_array($typeDef['attrs']))
         {
-            $this->_debug("serialize attributes for XML Schema type $ns:$uqType");
+            $this->debug("serialize attributes for XML Schema type $ns:$uqType");
             if (is_array($value))
             {
                 $xvalue = $value;
@@ -2330,7 +2330,7 @@ class WSDL extends Base
             }
             else
             {
-                $this->_debug("value is neither an array nor an object for XML Schema type $ns:$uqType");
+                $this->debug("value is neither an array nor an object for XML Schema type $ns:$uqType");
                 $xvalue = array();
             }
             
@@ -2339,23 +2339,23 @@ class WSDL extends Base
                 if (isset($xvalue['!' . $aName]))
                 {
                     $xname = '!' . $aName;
-                    $this->_debug("value provided for attribute $aName with key $xname");
+                    $this->debug("value provided for attribute $aName with key $xname");
                 }
                 else if (isset($xvalue[$aName]))
                 {
                     $xname = $aName;
-                    $this->_debug("value provided for attribute $aName with key $xname");
+                    $this->debug("value provided for attribute $aName with key $xname");
                 }
                 else if (isset($attrs['default']))
                 {
                     $xname = '!' . $aName;
                     $xvalue[$xname] = $attrs['default'];
-                    $this->_debug('use default value of ' . $xvalue[$aName] . ' for attribute ' . $aName);
+                    $this->debug('use default value of ' . $xvalue[$aName] . ' for attribute ' . $aName);
                 }
                 else
                 {
                     $xname = '';
-                    $this->_debug("no value provided for attribute $aName");
+                    $this->debug("no value provided for attribute $aName");
                 }
                 if ($xname)
                 {
@@ -2365,7 +2365,7 @@ class WSDL extends Base
         }
         else
         {
-            $this->_debug("no attributes to serialize for XML Schema type $ns:$uqType");
+            $this->debug("no attributes to serialize for XML Schema type $ns:$uqType");
         }
         return $xml;
     }
@@ -2384,7 +2384,7 @@ class WSDL extends Base
      */
     protected function serializeComplexTypeElements($typeDef, $value, $ns, $uqType, $use='encoded', $encodingStyle=false)
     {
-        $this->_debug("in _serializeComplexTypeElements for XML Schema type $ns:$uqType");
+        $this->debug("in _serializeComplexTypeElements for XML Schema type $ns:$uqType");
         $xml = '';
         if (isset($typeDef['extensionBase']))
         {
@@ -2396,17 +2396,17 @@ class WSDL extends Base
             }
             if ($typeDefx = $this->getTypeDef($uqTypex, $nsx))
             {
-                $this->_debug("serialize elements for extension base $nsx:$uqTypex");
-                $xml .= $this->_serializeComplexTypeElements($typeDefx, $value, $nsx, $uqTypex, $use, $encodingStyle);
+                $this->debug("serialize elements for extension base $nsx:$uqTypex");
+                $xml .= $this->serializeComplexTypeElements($typeDefx, $value, $nsx, $uqTypex, $use, $encodingStyle);
             }
             else
             {
-                $this->_debug("extension base $nsx:$uqTypex is not a supported type");
+                $this->debug("extension base $nsx:$uqTypex is not a supported type");
             }
         }
         if (isset($typeDef['elements']) && is_array($typeDef['elements']))
         {
-            $this->_debug("in _serializeComplexTypeElements, serialize elements for XML Schema type $ns:$uqType");
+            $this->debug("in _serializeComplexTypeElements, serialize elements for XML Schema type $ns:$uqType");
             if (is_array($value))
             {
                 $xvalue = $value;
@@ -2417,7 +2417,7 @@ class WSDL extends Base
             }
             else
             {
-                $this->_debug("value is neither an array nor an object for XML Schema type $ns:$uqType");
+                $this->debug("value is neither an array nor an object for XML Schema type $ns:$uqType");
                 $xvalue = array();
             }
             // toggle whether all elements are present - ideally should validate against schema
@@ -2432,7 +2432,7 @@ class WSDL extends Base
                     if (isset($attrs['default']))
                     {
                         $xvalue[$eName] = $attrs['default'];
-                        $this->_debug('use default value of ' . $xvalue[$eName] . ' for element ' . $eName);
+                        $this->debug('use default value of ' . $xvalue[$eName] . ' for element ' . $eName);
                     }
                 }
                 // if user took advantage of a minOccurs=0, then only serialize named parameters
@@ -2440,10 +2440,10 @@ class WSDL extends Base
                 {
                     if (isset($attrs['minOccurs']) && $attrs['minOccurs'] <> '0')
                     {
-                        $this->_debug("apparent error: no value provided for element $eName with minOccurs=" . $attrs['minOccurs']);
+                        $this->debug("apparent error: no value provided for element $eName with minOccurs=" . $attrs['minOccurs']);
                     }
                     // do nothing
-                    $this->_debug("no value provided for complexType element $eName and element is not nillable, so serialize nothing");
+                    $this->debug("no value provided for complexType element $eName and element is not nillable, so serialize nothing");
                 }
                 else
                 {
@@ -2473,12 +2473,12 @@ class WSDL extends Base
                             if (isset($attrs['type']) || isset($attrs['ref']))
                             {
                                 // serialize schema-defined type
-                                $xml .= $this->_serializeType($eName, isset($attrs['type']) ? $attrs['type'] : $attrs['ref'], $v, $use, $encodingStyle, $unqualified);
+                                $xml .= $this->serializeType($eName, isset($attrs['type']) ? $attrs['type'] : $attrs['ref'], $v, $use, $encodingStyle, $unqualified);
                             }
                             else
                             {
                                 // serialize generic type (can this ever really happen?)
-                                $this->_debug("calling serializeVal() for $v, $eName, false, false, false, false, $use");
+                                $this->debug("calling serializeVal() for $v, $eName, false, false, false, false, $use");
                                 $xml .= $this->serializeVal($v, $eName, false, false, false, false, $use);
                             }
                         }
@@ -2492,17 +2492,17 @@ class WSDL extends Base
                         else if (is_null($v) && isset($attrs['nillable']) && $attrs['nillable'] == 'true')
                         {
                             // TODO: serialize a nil correctly, but for now serialize schema-defined type
-                            $xml .= $this->_serializeType($eName, isset($attrs['type']) ? $attrs['type'] : $attrs['ref'], $v, $use, $encodingStyle, $unqualified);
+                            $xml .= $this->serializeType($eName, isset($attrs['type']) ? $attrs['type'] : $attrs['ref'], $v, $use, $encodingStyle, $unqualified);
                         }
                         else if (isset($attrs['type']) || isset($attrs['ref']))
                         {
                             // serialize schema-defined type
-                            $xml .= $this->_serializeType($eName, isset($attrs['type']) ? $attrs['type'] : $attrs['ref'], $v, $use, $encodingStyle, $unqualified);
+                            $xml .= $this->serializeType($eName, isset($attrs['type']) ? $attrs['type'] : $attrs['ref'], $v, $use, $encodingStyle, $unqualified);
                         }
                         else
                         {
                             // serialize generic type (can this ever really happen?)
-                            $this->_debug("calling serializeVal() for $v, $eName, false, false, false, false, $use");
+                            $this->debug("calling serializeVal() for $v, $eName, false, false, false, false, $use");
                             $xml .= $this->serializeVal($v, $eName, false, false, false, false, $use);
                         }
                     }
@@ -2511,7 +2511,7 @@ class WSDL extends Base
         }
         else
         {
-            $this->_debug("no elements to serialize for XML Schema type $ns:$uqType");
+            $this->debug("no elements to serialize for XML Schema type $ns:$uqType");
         }
         return $xml;
     }

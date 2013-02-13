@@ -407,17 +407,17 @@ class Base
         $use = 'encoded',
         $Val = false)
     {
-        $this->_debug("in serializeVal: name={$name}, type={$type}, name_ns={$name_ns}, type_ns={$type_ns}, use={$use}, Val={$Val}");
+        $this->debug("in serializeVal: name={$name}, type={$type}, name_ns={$name_ns}, type_ns={$type_ns}, use={$use}, Val={$Val}");
         $this->appendDebug('value=' . $this->varDump($val));
         $this->appendDebug('attributes=' . $this->varDump($attributes));
         
         if (is_object($val) && get_class($val) === 'Val' && !$Val)
         {
-            $this->_debug("serializeVal: serialize Val");
+            $this->debug("serializeVal: serialize Val");
             $xml = $val->serialize($use);
             $this->appendDebug($val->getDebug());
             $val->clearDebug();
-            $this->_debug("serializeVal of Val returning $xml");
+            $this->debug("serializeVal of Val returning $xml");
             return $xml;
         }
         // force valid name if necessary
@@ -455,18 +455,18 @@ class Base
         {
             foreach ($attributes as $k => $v)
             {
-                $atts .= " $k=\"".$this->_expandEntities($v).'"';
+                $atts .= " $k=\"".$this->expandEntities($v).'"';
             }
         }
         // serialize null value
         if ($val === null)
         {
-            $this->_debug("serializeVal: serialize null");
+            $this->debug("serializeVal: serialize null");
             if ($use === 'literal')
             {
                 // TODO: depends on minOccurs
                 $xml = "<$name$xmlns$atts/>";
-                $this->_debug("serializeVal returning $xml");
+                $this->debug("serializeVal returning $xml");
                 return $xml;
             }
             else
@@ -480,14 +480,14 @@ class Base
                     $type_str = '';
                 }
                 $xml = "<$name$xmlns$type_str$atts xsi:nil=\"true\"/>";
-                $this->_debug("serializeVal returning $xml");
+                $this->debug("serializeVal returning $xml");
                 return $xml;
             }
         }
         // serialize if an xsd built-in primitive type
         if ($type != '' && isset($this->typemap[$this->XMLSchemaVersion][$type]))
         {
-            $this->_debug("serializeVal: serialize xsd built-in primitive type");
+            $this->debug("serializeVal: serialize xsd built-in primitive type");
             if (is_bool($val))
             {
                 if ($type === 'boolean')
@@ -501,18 +501,18 @@ class Base
             }
             else if (is_string($val))
             {
-                $val = $this->_expandEntities($val);
+                $val = $this->expandEntities($val);
             }
             if ($use === 'literal')
             {
                 $xml = "<$name$xmlns$atts>$val</$name>";
-                $this->_debug("serializeVal returning $xml");
+                $this->debug("serializeVal returning $xml");
                 return $xml;
             }
             else
             {
                 $xml = "<$name$xmlns xsi:type=\"xsd:$type\"$atts>$val</$name>";
-                $this->_debug("serializeVal returning $xml");
+                $this->debug("serializeVal returning $xml");
                 return $xml;
             }
         }
@@ -521,7 +521,7 @@ class Base
         switch (true)
         {
             case (is_bool($val) || $type === 'boolean') :
-                $this->_debug("serializeVal: serialize boolean");
+                $this->debug("serializeVal: serialize boolean");
                 if ($type === 'boolean')
                 {
                     $val = $val ? 'true' : 'false';
@@ -541,7 +541,7 @@ class Base
             break;
             
             case (is_int($val) || is_long($val) || $type === 'int') :
-                $this->_debug("serializeVal: serialize int");
+                $this->debug("serializeVal: serialize int");
                 if ($use === 'literal')
                 {
                     $xml .= "<$name$xmlns$atts>$val</$name>";
@@ -553,7 +553,7 @@ class Base
             break;
 
             case (is_float($val)|| is_double($val) || $type === 'float') :
-                $this->_debug("serializeVal: serialize float");
+                $this->debug("serializeVal: serialize float");
                 if ($use === 'literal')
                 {
                     $xml .= "<$name$xmlns$atts>$val</$name>";
@@ -565,8 +565,8 @@ class Base
             break;
             
             case (is_string($val) || $type === 'string') :
-                $this->_debug("serializeVal: serialize string");
-                $val = $this->_expandEntities($val);
+                $this->debug("serializeVal: serialize string");
+                $val = $this->expandEntities($val);
                 if ($use === 'literal')
                 {
                     $xml .= "<$name$xmlns$atts>$val</$name>";
@@ -578,10 +578,10 @@ class Base
             break;
             
             case is_object($val) :
-                $this->_debug("serializeVal: serialize object");
+                $this->debug("serializeVal: serialize object");
                 if (get_class($val) === 'Val')
                 {
-                    $this->_debug("serializeVal: serialize Val object");
+                    $this->debug("serializeVal: serialize Val object");
                     $pXml = $val->serialize($use);
                     $this->appendDebug($val->getDebug());
                     $val->clearDebug();
@@ -591,11 +591,11 @@ class Base
                     if (!$name)
                     {
                         $name = get_class($val);
-                        $this->_debug("In serializeVal, used class name $name as element name");
+                        $this->debug("In serializeVal, used class name $name as element name");
                     }
                     else
                     {
-                        $this->_debug("In serializeVal, do not override name $name for element name for class " . get_class($val));
+                        $this->debug("In serializeVal, do not override name $name for element name for class " . get_class($val));
                     }
                     foreach (get_object_vars($val) as $k => $v)
                     {
@@ -625,7 +625,7 @@ class Base
                 $valueType = $this->isArraySimpleOrStruct($val);
                 if ($valueType === 'arraySimple' || preg_match('/^ArrayOf/', $type))
                 {
-                    $this->_debug("serializeVal: serialize array");
+                    $this->debug("serializeVal: serialize array");
                     $i = 0;
                     if (is_array($val) && count($val)> 0)
                     {
@@ -722,7 +722,7 @@ class Base
                 else
                 {
                     // got a struct
-                    $this->_debug("serializeVal: serialize struct");
+                    $this->debug("serializeVal: serialize struct");
                     if (isset($type) && isset($type_prefix))
                     {
                         $type_str = " xsi:type=\"$type_prefix:$type\"";
@@ -759,11 +759,11 @@ class Base
             break;
             
             default:
-                $this->_debug("serializeVal: serialize unknown");
+                $this->debug("serializeVal: serialize unknown");
                 $xml .= 'not detected, got '.gettype($val).' for '.$val;
             break;
         }
-        $this->_debug("serializeVal returning $xml");
+        $this->debug("serializeVal returning $xml");
         return $xml;
     }
 
@@ -792,10 +792,10 @@ class Base
             $body = utf8_encode($body);
         }
 
-        $this->_debug("In serializeEnvelope length=" . strlen($body) . " body (max 1000 characters)=" . substr($body, 0, 1000) . " style=$style use=$use encodingStyle=$encodingStyle");
-        $this->_debug("headers:");
+        $this->debug("In serializeEnvelope length=" . strlen($body) . " body (max 1000 characters)=" . substr($body, 0, 1000) . " style=$style use=$use encodingStyle=$encodingStyle");
+        $this->debug("headers:");
         $this->appendDebug($this->varDump($headers));
-        $this->_debug("namespaces:");
+        $this->debug("namespaces:");
         $this->appendDebug($this->varDump($namespaces));
 
         // serialize namespaces
@@ -827,7 +827,7 @@ class Base
                     }
                 }
                 $headers = $xml;
-                $this->_debug("In serializeEnvelope, serialized array of headers to $headers");
+                $this->debug("In serializeEnvelope, serialized array of headers to $headers");
             }
             $headers = ($this->soapDefEncoding === "UTF-8" ? utf8_encode("<SOAP-ENV:Header>".$headers."</SOAP-ENV:Header>") : "<SOAP-ENV:Header>".$headers."</SOAP-ENV:Header>");
         }
@@ -969,7 +969,7 @@ class Base
         {
             return $this->namespaces[$prefix];
         }
-        //$this->_setError("No namespace registered for prefix '$prefix'");
+        //$this->setError("No namespace registered for prefix '$prefix'");
         return false;
     }
 

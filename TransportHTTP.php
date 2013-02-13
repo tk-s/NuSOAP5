@@ -265,16 +265,16 @@ class TransportHTTP extends Base
     function __construct($url, $curl_options = NULL, $useCurl = false)
     {
         parent::__construct();
-        $this->_debug("ctor url=$url useCurl=$useCurl curl_options:");
+        $this->debug("ctor url=$url useCurl=$useCurl curl_options:");
         $this->appendDebug($this->varDump($curl_options));
-        $this->_setURL($url);
+        $this->setURL($url);
         
         if (is_array($curl_options))
         {
             $this->chOptions = $curl_options;
         }
         $this->useCurl = $useCurl;
-        $this->_setHeader('User-Agent', $this->title.'/'.$this->version);
+        $this->setHeader('User-Agent', $this->title.'/'.$this->version);
     }
 
     /**
@@ -286,7 +286,7 @@ class TransportHTTP extends Base
     */
     protected function setCurlOption($option, $value)
     {
-        $this->_debug("setCurlOption option=$option, value=");
+        $this->debug("setCurlOption option=$option, value=");
         $this->appendDebug($this->varDump($value));
         curl_setopt($this->ch, $option, $value);
     }
@@ -301,7 +301,7 @@ class TransportHTTP extends Base
     function _setHeader($name, $value)
     {
         $this->outgoingHeaders[$name] = $value;
-        $this->_debug("set header $name: $value");
+        $this->debug("set header $name: $value");
     }
 
     /**
@@ -314,7 +314,7 @@ class TransportHTTP extends Base
     {
         if (isset($this->outgoingHeaders[$name]))
         {
-            $this->_debug("unset header $name");
+            $this->debug("unset header $name");
             unset($this->outgoingHeaders[$name]);
         }
     }
@@ -332,7 +332,7 @@ class TransportHTTP extends Base
         $u = parse_url($url);
         foreach ($u as $k => $v)
         {
-            $this->_debug("parsed URL $k = $v");
+            $this->debug("parsed URL $k = $v");
             $this->$k = $v;
         }
         
@@ -361,11 +361,11 @@ class TransportHTTP extends Base
         // build headers
         if (!isset($u['port']))
         {
-            $this->_setHeader('Host', $this->host);
+            $this->setHeader('Host', $this->host);
         }
         else
         {
-            $this->_setHeader('Host', $this->host.':'.$this->port);
+            $this->setHeader('Host', $this->host.':'.$this->port);
         }
 
         if (isset($u['user']) && $u['user'] != '')
@@ -411,9 +411,9 @@ class TransportHTTP extends Base
     */
     protected function connect($connection_timeout = 0, $response_timeout = 30)
     {
-        $this->_debug("connect connection_timeout $connection_timeout, response_timeout $response_timeout, scheme $this->scheme, host $this->host, port $this->port");
+        $this->debug("connect connection_timeout $connection_timeout, response_timeout $response_timeout, scheme $this->scheme, host $this->host, port $this->port");
       
-        if ($this->_IOMethod() == 'socket')
+        if ($this->IOMethod() == 'socket')
         {
             if (!is_array($this->proxy))
             {
@@ -431,11 +431,11 @@ class TransportHTTP extends Base
             {
                 if (!feof($this->fp))
                 {
-                    $this->_debug('Re-use persistent connection');
+                    $this->debug('Re-use persistent connection');
                     return true;
                 }
                 fclose($this->fp);
-                $this->_debug('Closed persistent connection at EOF');
+                $this->debug('Closed persistent connection at EOF');
             }
 
             // munge host if using OpenSSL
@@ -443,7 +443,7 @@ class TransportHTTP extends Base
             {
                 $host = 'ssl://' . $host;
             }
-            $this->_debug('calling fsockopen with host ' . $host . ' connection_timeout ' . $connection_timeout);
+            $this->debug('calling fsockopen with host ' . $host . ' connection_timeout ' . $connection_timeout);
 
             // open socket
             if ($connection_timeout > 0)
@@ -467,24 +467,24 @@ class TransportHTTP extends Base
                 {
                     $msg .= ' prior to connect().  This is often a problem looking up the host name.';
                 }
-                $this->_debug($msg);
-                $this->_setError($msg);
+                $this->debug($msg);
+                $this->setError($msg);
                 return false;
             }
             
             // set response timeout
-            $this->_debug('set response timeout to ' . $response_timeout);
+            $this->debug('set response timeout to ' . $response_timeout);
             socket_set_timeout( $this->fp, $response_timeout);
 
-            $this->_debug('socket connected');
+            $this->debug('socket connected');
             return true;
         }
-        else if ($this->_IOMethod() == 'curl')
+        else if ($this->IOMethod() == 'curl')
         {
             if (!extension_loaded('curl'))
             {
-    //          $this->_setError('cURL Extension, or OpenSSL extension w/ PHP version >= 4.3 is required for HTTPS');
-                $this->_setError('The PHP cURL Extension is required for HTTPS or NLTM.  You will need to re-build or update your PHP to include cURL or change php.ini to load the PHP cURL extension.');
+    //          $this->setError('cURL Extension, or OpenSSL extension w/ PHP version >= 4.3 is required for HTTPS');
+                $this->setError('The PHP cURL Extension is required for HTTPS or NLTM.  You will need to re-build or update your PHP to include cURL or change php.ini to load the PHP cURL extension.');
                 return false;
             }
             // Avoid warnings when PHP does not have these options
@@ -518,34 +518,34 @@ class TransportHTTP extends Base
             else
                 $CURLAUTH_NTLM = 8;
 
-            $this->_debug('connect using cURL');
+            $this->debug('connect using cURL');
             // init CURL
             $this->ch = curl_init();
             // set url
             $hostURL = ($this->port != '') ? "$this->scheme://$this->host:$this->port" : "$this->scheme://$this->host";
             // add path
             $hostURL .= $this->path;
-            $this->_setCurlOption(CURLOPT_URL, $hostURL);
+            $this->setCurlOption(CURLOPT_URL, $hostURL);
             
             // follow location headers (re-directs)
             if (ini_get('open_basedir'))
             {
-                $this->_debug('open_basedir set, so do not set CURLOPT_FOLLOWLOCATION');
-                $this->_debug('open_basedir = ');
+                $this->debug('open_basedir set, so do not set CURLOPT_FOLLOWLOCATION');
+                $this->debug('open_basedir = ');
                 $this->appendDebug($this->varDump(ini_get('open_basedir')));
             }
             else
             {
-                $this->_setCurlOption(CURLOPT_FOLLOWLOCATION, 1);
+                $this->setCurlOption(CURLOPT_FOLLOWLOCATION, 1);
             }
             // ask for headers in the response output
-            $this->_setCurlOption(CURLOPT_HEADER, 1);
+            $this->setCurlOption(CURLOPT_HEADER, 1);
             // ask for the response output as the return value
-            $this->_setCurlOption(CURLOPT_RETURNTRANSFER, 1);
+            $this->setCurlOption(CURLOPT_RETURNTRANSFER, 1);
             // encode
             // We manage this ourselves through headers and encoding
     //      if (function_exists('gzuncompress')){
-    //          $this->_setCurlOption(CURLOPT_ENCODING, 'deflate');
+    //          $this->setCurlOption(CURLOPT_ENCODING, 'deflate');
     //      }
             // persistent connection
             if ($this->persistentConnection)
@@ -554,78 +554,78 @@ class TransportHTTP extends Base
                 // the code when it used CURLOPT_CUSTOMREQUEST to send the request.
                 // The way we send data, we cannot use persistent connections, since
                 // there will be some "junk" at the end of our request.
-                //$this->_setCurlOption(CURL_HTTP_VERSION_1_1, true);
+                //$this->setCurlOption(CURL_HTTP_VERSION_1_1, true);
                 $this->persistentConnection = false;
-                $this->_setHeader('Connection', 'close');
+                $this->setHeader('Connection', 'close');
             }
             
             // set timeouts
             if ($connection_timeout != 0)
             {
-                $this->_setCurlOption($CURLOPT_CONNECTIONTIMEOUT, $connection_timeout);
+                $this->setCurlOption($CURLOPT_CONNECTIONTIMEOUT, $connection_timeout);
             }
             
             if ($response_timeout != 0)
             {
-                $this->_setCurlOption(CURLOPT_TIMEOUT, $response_timeout);
+                $this->setCurlOption(CURLOPT_TIMEOUT, $response_timeout);
             }
 
             if ($this->scheme == 'https')
             {
-                $this->_debug('set cURL SSL verify options');
+                $this->debug('set cURL SSL verify options');
                 
                 // recent versions of cURL turn on peer/host checking by default,
                 // while PHP binaries are not compiled with a default location for the
                 // CA cert bundle, so disable peer/host checking.
                 
-                $this->_setCurlOption(CURLOPT_SSL_VERIFYPEER, 0);
-                $this->_setCurlOption(CURLOPT_SSL_VERIFYHOST, 0);
+                $this->setCurlOption(CURLOPT_SSL_VERIFYPEER, 0);
+                $this->setCurlOption(CURLOPT_SSL_VERIFYHOST, 0);
         
                 // support client certificates (thanks Tobias Boes, Doug Anarino, Eryan Ariobowo)
                 if ($this->authtype == 'certificate')
                 {
-                    $this->_debug('set cURL certificate options');
+                    $this->debug('set cURL certificate options');
                     if (isset($this->certRequest['cainfofile']))
                     {
-                        $this->_setCurlOption(CURLOPT_CAINFO, $this->certRequest['cainfofile']);
+                        $this->setCurlOption(CURLOPT_CAINFO, $this->certRequest['cainfofile']);
                     }
                     
                     if (isset($this->certRequest['verifypeer']))
                     {
-                        $this->_setCurlOption(CURLOPT_SSL_VERIFYPEER, $this->certRequest['verifypeer']);
+                        $this->setCurlOption(CURLOPT_SSL_VERIFYPEER, $this->certRequest['verifypeer']);
                     }
                     else
                     {
-                        $this->_setCurlOption(CURLOPT_SSL_VERIFYPEER, 1);
+                        $this->setCurlOption(CURLOPT_SSL_VERIFYPEER, 1);
                     }
                     
                     if (isset($this->certRequest['verifyhost']))
                     {
-                        $this->_setCurlOption(CURLOPT_SSL_VERIFYHOST, $this->certRequest['verifyhost']);
+                        $this->setCurlOption(CURLOPT_SSL_VERIFYHOST, $this->certRequest['verifyhost']);
                     }
                     else
                     {
-                        $this->_setCurlOption(CURLOPT_SSL_VERIFYHOST, 1);
+                        $this->setCurlOption(CURLOPT_SSL_VERIFYHOST, 1);
                     }
                     
                     if (isset($this->certRequest['sslcertfile']))
                     {
-                        $this->_setCurlOption(CURLOPT_SSLCERT, $this->certRequest['sslcertfile']);
+                        $this->setCurlOption(CURLOPT_SSLCERT, $this->certRequest['sslcertfile']);
                     }
                     
                     if (isset($this->certRequest['sslkeyfile']))
                     {
-                        $this->_setCurlOption(CURLOPT_SSLKEY, $this->certRequest['sslkeyfile']);
+                        $this->setCurlOption(CURLOPT_SSLKEY, $this->certRequest['sslkeyfile']);
                     }
                     
                     if (isset($this->certRequest['passphrase']))
                     {
-                        $this->_setCurlOption(CURLOPT_SSLKEYPASSWD, $this->certRequest['passphrase']);
+                        $this->setCurlOption(CURLOPT_SSLKEYPASSWD, $this->certRequest['passphrase']);
                     }
                     
                     if (isset($this->certRequest['certpassword']))
                     {
-                        $this->_setCurlOption(CURLOPT_SSLCERTPASSWD, $this->certRequest['certpassword']);
+                        $this->setCurlOption(CURLOPT_SSLCERTPASSWD, $this->certRequest['certpassword']);
                     }
                 }
             }
@@ -633,63 +633,63 @@ class TransportHTTP extends Base
             {
                 if ($this->username)
                 {
-                    $this->_debug('set cURL username/password');
-                    $this->_setCurlOption(CURLOPT_USERPWD, "$this->username:$this->password");
+                    $this->debug('set cURL username/password');
+                    $this->setCurlOption(CURLOPT_USERPWD, "$this->username:$this->password");
                 }
                 
                 if ($this->authtype == 'basic')
                 {
-                    $this->_debug('set cURL for Basic authentication');
-                    $this->_setCurlOption($CURLOPT_HTTPAUTH, $CURLAUTH_BASIC);
+                    $this->debug('set cURL for Basic authentication');
+                    $this->setCurlOption($CURLOPT_HTTPAUTH, $CURLAUTH_BASIC);
                 }
                 
                 if ($this->authtype == 'digest')
                 {
-                    $this->_debug('set cURL for digest authentication');
-                    $this->_setCurlOption($CURLOPT_HTTPAUTH, $CURLAUTH_DIGEST);
+                    $this->debug('set cURL for digest authentication');
+                    $this->setCurlOption($CURLOPT_HTTPAUTH, $CURLAUTH_DIGEST);
                 }
                 
                 if ($this->authtype == 'ntlm')
                 {
-                    $this->_debug('set cURL for NTLM authentication');
-                    $this->_setCurlOption($CURLOPT_HTTPAUTH, $CURLAUTH_NTLM);
+                    $this->debug('set cURL for NTLM authentication');
+                    $this->setCurlOption($CURLOPT_HTTPAUTH, $CURLAUTH_NTLM);
                 }
             }
 
             if (is_array($this->proxy))
             {
-                $this->_debug('set cURL proxy options');
+                $this->debug('set cURL proxy options');
                 if ($this->proxy['port'] != '')
                 {
-                    $this->_setCurlOption(CURLOPT_PROXY, $this->proxy['host'].':'.$this->proxy['port']);
+                    $this->setCurlOption(CURLOPT_PROXY, $this->proxy['host'].':'.$this->proxy['port']);
                 }
                 else
                 {
-                    $this->_setCurlOption(CURLOPT_PROXY, $this->proxy['host']);
+                    $this->setCurlOption(CURLOPT_PROXY, $this->proxy['host']);
                 }
                 
                 if ($this->proxy['username'] || $this->proxy['password'])
                 {
-                    $this->_debug('set cURL proxy authentication options');
-                    $this->_setCurlOption(CURLOPT_PROXYUSERPWD, $this->proxy['username'].':'.$this->proxy['password']);
+                    $this->debug('set cURL proxy authentication options');
+                    $this->setCurlOption(CURLOPT_PROXYUSERPWD, $this->proxy['username'].':'.$this->proxy['password']);
                     if ($this->proxy['authtype'] == 'basic')
                     {
-                        $this->_setCurlOption($CURLOPT_PROXYAUTH, $CURLAUTH_BASIC);
+                        $this->setCurlOption($CURLOPT_PROXYAUTH, $CURLAUTH_BASIC);
                     }
                     
                     if ($this->proxy['authtype'] == 'ntlm')
                     {
-                        $this->_setCurlOption($CURLOPT_PROXYAUTH, $CURLAUTH_NTLM);
+                        $this->setCurlOption($CURLOPT_PROXYAUTH, $CURLAUTH_NTLM);
                     }
                 }
             }
-            $this->_debug('cURL connection set up');
+            $this->debug('cURL connection set up');
             return true;
         }
         else
         {
-            $this->_setError('Unknown scheme ' . $this->scheme);
-            $this->_debug('Unknown scheme ' . $this->scheme);
+            $this->setError('Unknown scheme ' . $this->scheme);
+            $this->debug('Unknown scheme ' . $this->scheme);
             return false;
         }
     }
@@ -706,7 +706,7 @@ class TransportHTTP extends Base
     */
     public function send($data, $timeout=0, $response_timeout=30, $cookies=NULL)
     {
-        $this->_debug('entered send() with data of length: '.strlen($data));
+        $this->debug('entered send() with data of length: '.strlen($data));
 
         $this->tryagain = true;
         $tries = 0;
@@ -716,26 +716,26 @@ class TransportHTTP extends Base
             if ($tries++ < 2)
             {
                 // make connnection
-                if (!$this->_connect($timeout, $response_timeout))
+                if (!$this->connect($timeout, $response_timeout))
                 {
                     return false;
                 }
                 
                 // send request
-                if (!$this->_sendRequest($data, $cookies))
+                if (!$this->sendRequest($data, $cookies))
                 {
                     return false;
                 }
                 
                 // get response
-                $respdata = $this->_getResponse();
+                $respdata = $this->getResponse();
             }
             else
             {
-                $this->_setError("Too many tries to get an OK response ($this->responseStatusLine)");
+                $this->setError("Too many tries to get an OK response ($this->responseStatusLine)");
             }
         }       
-        $this->_debug('end of send()');
+        $this->debug('end of send()');
         return $respdata;
     }
     
@@ -756,15 +756,15 @@ class TransportHTTP extends Base
         Array $digestRequest = array(),
         Array $certRequest = array())
     {
-        $this->_debug("setCredentials username=$username authtype=$authtype digestRequest=");
+        $this->debug("setCredentials username=$username authtype=$authtype digestRequest=");
         $this->appendDebug($this->varDump($digestRequest));
-        $this->_debug("certRequest=");
+        $this->debug("certRequest=");
         $this->appendDebug($this->varDump($certRequest));
         
         // cf. RFC 2617
         if ($authtype == 'basic')
         {
-            $this->_setHeader('Authorization', 'Basic '.base64_encode(str_replace(':','',$username).':'.$password));
+            $this->setHeader('Authorization', 'Basic '.base64_encode(str_replace(':','',$username).':'.$password));
         }
         else if ($authtype == 'digest')
         {
@@ -817,18 +817,18 @@ class TransportHTTP extends Base
                     $opaque = ', opaque="' . $digestRequest['opaque'] . '"';
                 }
 
-                $this->_setHeader('Authorization', 'Digest username="' . $username . '", realm="' . $digestRequest['realm'] . '", nonce="' . $nonce . '", uri="' . $this->digetURI . $opaque . '", cnonce="' . $cnonce . '", nc=' . sprintf("%08x", $digestRequest['nc']) . ', qop="' . $digestRequest['qop'] . '", response="' . $hashedDigest . '"');
+                $this->setHeader('Authorization', 'Digest username="' . $username . '", realm="' . $digestRequest['realm'] . '", nonce="' . $nonce . '", uri="' . $this->digetURI . $opaque . '", cnonce="' . $cnonce . '", nc=' . sprintf("%08x", $digestRequest['nc']) . ', qop="' . $digestRequest['qop'] . '", response="' . $hashedDigest . '"');
             }
         }
         else if ($authtype == 'certificate')
         {
             $this->certRequest = $certRequest;
-            $this->_debug('Authorization header not set for certificate');
+            $this->debug('Authorization header not set for certificate');
         }
         else if ($authtype == 'ntlm')
         {
             // do nothing
-            $this->_debug('Authorization header not set for ntlm');
+            $this->debug('Authorization header not set for ntlm');
         }
         $this->username = $username;
         $this->password = $password;
@@ -844,7 +844,7 @@ class TransportHTTP extends Base
     */
     public function setSOAPAction($soapaction)
     {
-        $this->_setHeader('SOAPAction', '"' . $soapaction . '"');
+        $this->setHeader('SOAPAction', '"' . $soapaction . '"');
     }
     
     /**
@@ -858,10 +858,10 @@ class TransportHTTP extends Base
         if (function_exists('gzdeflate'))
         {
             $this->protocolVersion = '1.1';
-            $this->_setHeader('Accept-Encoding', $enc);
+            $this->setHeader('Accept-Encoding', $enc);
             if (!isset($this->outgoingHeaders['Connection']))
             {
-                $this->_setHeader('Connection', 'close');
+                $this->setHeader('Connection', 'close');
                 $this->persistentConnection = false;
             }
             $this->encoding = $enc;
@@ -896,12 +896,12 @@ class TransportHTTP extends Base
             );
             if ($proxyusername != '' && $proxypassword != '' && $proxyauthtype = 'basic')
             {
-                $this->_setHeader('Proxy-Authorization', ' Basic '.base64_encode($proxyusername.':'.$proxypassword));
+                $this->setHeader('Proxy-Authorization', ' Basic '.base64_encode($proxyusername.':'.$proxypassword));
             }
         }
         else
         {
-            $this->_debug('remove proxy');
+            $this->debug('remove proxy');
             $proxy = null;
             unsetHeader('Proxy-Authorization');
         }
@@ -956,7 +956,7 @@ class TransportHTTP extends Base
         $chunkend = strpos($buffer, $lb);
         if ($chunkend == FALSE)
         {
-            $this->_debug('no linebreak found in decodeChunked');
+            $this->debug('no linebreak found in decodeChunked');
             return $new;
         }
         $temp = substr($buffer,0,$chunkend);
@@ -965,7 +965,7 @@ class TransportHTTP extends Base
         // while (chunk-size > 0) {
         while ($chunk_size > 0)
         {
-            $this->_debug("chunkstart: $chunkstart chunk_size: $chunk_size");
+            $this->debug("chunkstart: $chunkstart chunk_size: $chunk_size");
             $chunkend = strpos( $buffer, $lb, $chunkstart + $chunk_size);
             
             // Just in case we got a broken connection
@@ -1015,7 +1015,7 @@ class TransportHTTP extends Base
 
         // add content-length header
         if ($this->requestMethod != 'GET') {
-            $this->_setHeader('Content-Length', strlen($data));
+            $this->setHeader('Content-Length', strlen($data));
         }
 
         // start building outgoing payload:
@@ -1029,14 +1029,14 @@ class TransportHTTP extends Base
         }
         
         $req = "$this->requestMethod $uri HTTP/$this->protocolVersion";
-        $this->_debug("HTTP request: $req");
+        $this->debug("HTTP request: $req");
         $this->outgoingPayload = "$req\r\n";
 
         // loop thru headers, serializing
         foreach ($this->outgoingHeaders as $k => $v)
         {
             $hdr = $k.': '.$v;
-            $this->_debug("HTTP header: $hdr");
+            $this->debug("HTTP header: $hdr");
             $this->outgoingPayload .= "$hdr\r\n";
         }
 
@@ -1044,7 +1044,7 @@ class TransportHTTP extends Base
         if ($cookie_str != '')
         {
             $hdr = 'Cookie: '.$cookie_str;
-            $this->_debug("HTTP header: $hdr");
+            $this->debug("HTTP header: $hdr");
             $this->outgoingPayload .= "$hdr\r\n";
         }
 
@@ -1066,29 +1066,29 @@ class TransportHTTP extends Base
     protected function sendRequest($data, $cookies = NULL)
     {
         // build cookie string
-        $cookie_str = $this->_getCookiesForRequest($cookies, (($this->scheme == 'ssl') || ($this->scheme == 'https')));
+        $cookie_str = $this->getCookiesForRequest($cookies, (($this->scheme == 'ssl') || ($this->scheme == 'https')));
 
         // build payload
-        $this->_buildPayload($data, $cookie_str);
+        $this->buildPayload($data, $cookie_str);
 
-        if ($this->_IOMethod() == 'socket')
+        if ($this->IOMethod() == 'socket')
         {
             // send payload
             if (!fputs($this->fp, $this->outgoingPayload, strlen($this->outgoingPayload))) {
-                $this->_setError('couldn\'t write message data to socket');
-                $this->_debug('couldn\'t write message data to socket');
+                $this->setError('couldn\'t write message data to socket');
+                $this->debug('couldn\'t write message data to socket');
                 return false;
             }
-            $this->_debug('wrote data to socket, length = ' . strlen($this->outgoingPayload));
+            $this->debug('wrote data to socket, length = ' . strlen($this->outgoingPayload));
             return true;
         }
-        else if ($this->_IOMethod() == 'curl')
+        else if ($this->IOMethod() == 'curl')
         {
             // set payload
             // cURL does say this should only be the verb, and in fact it
             // turns out that the URI and HTTP version are appended to this, which
             // some servers refuse to work with (so we no longer use this method!)
-            //$this->_setCurlOption(CURLOPT_CUSTOMREQUEST, $this->outgoingPayload);
+            //$this->setCurlOption(CURLOPT_CUSTOMREQUEST, $this->outgoingPayload);
             $curl_headers = array();
             foreach ($this->outgoingHeaders as $k => $v)
             {
@@ -1099,7 +1099,7 @@ class TransportHTTP extends Base
                     case "Host" :
                     case "Authorization" :
                     case "Proxy-Authorization" :
-                        $this->_debug("Skip cURL header $k: $v");
+                        $this->debug("Skip cURL header $k: $v");
                     break;
 
                     default : 
@@ -1111,13 +1111,13 @@ class TransportHTTP extends Base
             {
                 $curl_headers[] = 'Cookie: ' . $cookie_str;
             }
-            $this->_setCurlOption(CURLOPT_HTTPHEADER, $curl_headers);
-            $this->_debug('set cURL HTTP headers');
+            $this->setCurlOption(CURLOPT_HTTPHEADER, $curl_headers);
+            $this->debug('set cURL HTTP headers');
             if ($this->requestMethod == "POST")
             {
-                $this->_setCurlOption(CURLOPT_POST, 1);
-                $this->_setCurlOption(CURLOPT_POSTFIELDS, $data);
-                $this->_debug('set cURL POST data');
+                $this->setCurlOption(CURLOPT_POST, 1);
+                $this->setCurlOption(CURLOPT_POSTFIELDS, $data);
+                $this->debug('set cURL POST data');
             }
             else
             {
@@ -1126,10 +1126,10 @@ class TransportHTTP extends Base
             // insert custom user-set cURL options
             foreach ($this->chOptions as $key => $val)
             {
-                $this->_setCurlOption($key, $val);
+                $this->setCurlOption($key, $val);
             }
 
-            $this->_debug('set cURL payload');
+            $this->debug('set cURL payload');
             return true;
         }
     }
@@ -1144,7 +1144,7 @@ class TransportHTTP extends Base
     {
         $this->incomingPayload = '';
         
-        if ($this->_IOMethod() == 'socket')
+        if ($this->IOMethod() == 'socket')
         {
             // loop until headers have been retrieved
             $data = '';
@@ -1154,22 +1154,22 @@ class TransportHTTP extends Base
                 if (feof($this->fp))
                 {
                     $this->incomingPayload = $data;
-                    $this->_debug('found no headers before EOF after length ' . strlen($data));
-                    $this->_debug("received before EOF:\n" . $data);
-                    $this->_setError('server failed to send headers');
+                    $this->debug('found no headers before EOF after length ' . strlen($data));
+                    $this->debug("received before EOF:\n" . $data);
+                    $this->setError('server failed to send headers');
                     return false;
                 }
 
                 $tmp = fgets($this->fp, 256);
                 $tmplen = strlen($tmp);
-                $this->_debug("read line of $tmplen bytes: " . trim($tmp));
+                $this->debug("read line of $tmplen bytes: " . trim($tmp));
 
                 if ($tmplen == 0)
                 {
                     $this->incomingPayload = $data;
-                    $this->_debug('socket read of headers timed out after length ' . strlen($data));
-                    $this->_debug("read before timeout: " . $data);
-                    $this->_setError('socket read of headers timed out');
+                    $this->debug('socket read of headers timed out after length ' . strlen($data));
+                    $this->debug("read before timeout: " . $data);
+                    $this->setError('socket read of headers timed out');
                     return false;
                 }
 
@@ -1196,7 +1196,7 @@ class TransportHTTP extends Base
             }
             // store header data
             $this->incomingPayload .= $data;
-            $this->_debug('found end of headers after length ' . strlen($data));
+            $this->debug('found end of headers after length ' . strlen($data));
             // process headers
             $header_data = trim(substr($data,0,$pos));
             $header_array = explode($lb,$header_data);
@@ -1216,11 +1216,11 @@ class TransportHTTP extends Base
                         if ($cookie)
                         {
                             $this->incomingCookies[] = $cookie;
-                            $this->_debug('found cookie: ' . $cookie['name'] . ' = ' . $cookie['value']);
+                            $this->debug('found cookie: ' . $cookie['name'] . ' = ' . $cookie['value']);
                         }
                         else
                         {
-                            $this->_debug('did not find cookie in ' . trim($arr[1]));
+                            $this->debug('did not find cookie in ' . trim($arr[1]));
                         }
                     }
                 }
@@ -1236,19 +1236,19 @@ class TransportHTTP extends Base
             {
                 $content_length =  2147483647;  // ignore any content-length header
                 $chunked = true;
-                $this->_debug("want to read chunked content");
+                $this->debug("want to read chunked content");
             }
             else if (isset($this->incomingHeaders['content-length']))
             {
                 $content_length = $this->incomingHeaders['content-length'];
                 $chunked = false;
-                $this->_debug("want to read content of length $content_length");
+                $this->debug("want to read content of length $content_length");
             }
             else
             {
                 $content_length =  2147483647;
                 $chunked = false;
-                $this->_debug("want to read content to EOF");
+                $this->debug("want to read content to EOF");
             }
             
             $data = '';
@@ -1258,17 +1258,17 @@ class TransportHTTP extends Base
                 {
                     $tmp = fgets($this->fp, 256);
                     $tmplen = strlen($tmp);
-                    $this->_debug("read chunk line of $tmplen bytes");
+                    $this->debug("read chunk line of $tmplen bytes");
                     if ($tmplen == 0)
                     {
                         $this->incomingPayload = $data;
-                        $this->_debug('socket read of chunk length timed out after length ' . strlen($data));
-                        $this->_debug("read before timeout:\n" . $data);
-                        $this->_setError('socket read of chunk length timed out');
+                        $this->debug('socket read of chunk length timed out after length ' . strlen($data));
+                        $this->debug("read before timeout:\n" . $data);
+                        $this->setError('socket read of chunk length timed out');
                         return false;
                     }
                     $content_length = hexdec(trim($tmp));
-                    $this->_debug("chunk length $content_length");
+                    $this->debug("chunk length $content_length");
                 }
                 
                 $strlen = 0;
@@ -1278,13 +1278,13 @@ class TransportHTTP extends Base
                     $readlen = min(8192, $content_length - $strlen);
                     $tmp = fread($this->fp, $readlen);
                     $tmplen = strlen($tmp);
-                    $this->_debug("read buffer of $tmplen bytes");
+                    $this->debug("read buffer of $tmplen bytes");
                     if (($tmplen == 0) && (!feof($this->fp)))
                     {
                         $this->incomingPayload = $data;
-                        $this->_debug('socket read of body timed out after length ' . strlen($data));
-                        $this->_debug("read before timeout:\n" . $data);
-                        $this->_setError('socket read of body timed out');
+                        $this->debug('socket read of body timed out after length ' . strlen($data));
+                        $this->debug("read before timeout:\n" . $data);
+                        $this->setError('socket read of body timed out');
                         return false;
                     }
                     $strlen += $tmplen;
@@ -1295,13 +1295,13 @@ class TransportHTTP extends Base
                 {
                     $tmp = fgets($this->fp, 256);
                     $tmplen = strlen($tmp);
-                    $this->_debug("read chunk terminator of $tmplen bytes");
+                    $this->debug("read chunk terminator of $tmplen bytes");
                     if ($tmplen == 0)
                     {
                         $this->incomingPayload = $data;
-                        $this->_debug('socket read of chunk terminator timed out after length ' . strlen($data));
-                        $this->_debug("read before timeout:\n" . $data);
-                        $this->_setError('socket read of chunk terminator timed out');
+                        $this->debug('socket read of chunk terminator timed out after length ' . strlen($data));
+                        $this->debug("read before timeout:\n" . $data);
+                        $this->setError('socket read of chunk terminator timed out');
                         return false;
                     }
                 }
@@ -1309,12 +1309,12 @@ class TransportHTTP extends Base
             
             if (feof($this->fp))
             {
-                $this->_debug('read to EOF');
+                $this->debug('read to EOF');
             }
             
-            $this->_debug('read body of length ' . strlen($data));
+            $this->debug('read body of length ' . strlen($data));
             $this->incomingPayload .= $data;
-            $this->_debug('received a total of '.strlen($this->incomingPayload).' bytes of data from server');
+            $this->debug('received a total of '.strlen($this->incomingPayload).' bytes of data from server');
             
             // close filepointer
             if ((isset($this->incomingHeaders['connection']) && strtolower($this->incomingHeaders['connection']) == 'close') || 
@@ -1322,20 +1322,20 @@ class TransportHTTP extends Base
             {
                 fclose($this->fp);
                 $this->fp = false;
-                $this->_debug('closed socket');
+                $this->debug('closed socket');
             }
             
             // connection was closed unexpectedly
             if ($this->incomingPayload == '')
             {
-                $this->_setError('no response from server');
+                $this->setError('no response from server');
                 return false;
             }
             
             // decode transfer-encoding
     //      if (isset($this->incomingHeaders['transfer-encoding']) && strtolower($this->incomingHeaders['transfer-encoding']) == 'chunked'){
     //          if (!$data = $this->decodeChunked($data, $lb)){
-    //              $this->_setError('Decoding of chunked data failed');
+    //              $this->setError('Decoding of chunked data failed');
     //              return false;
     //          }
                 //print "<pre>\nde-chunked:\n---------------\n$data\n\n---------------\n</pre>";
@@ -1344,10 +1344,10 @@ class TransportHTTP extends Base
     //      }
     
         }
-        else if ($this->_IOMethod() == 'curl')
+        else if ($this->IOMethod() == 'curl')
         {
             // send and receive
-            $this->_debug('send and receive with cURL');
+            $this->debug('send and receive with cURL');
             $this->incomingPayload = curl_exec($this->ch);
             $data = $this->incomingPayload;
 
@@ -1360,8 +1360,8 @@ class TransportHTTP extends Base
                 {
                     $err .= "$k: $v<br>";
                 }
-                $this->_debug($err);
-                $this->_setError($err);
+                $this->debug($err);
+                $this->setError($err);
                 curl_close($this->ch);
                 return false;
             }
@@ -1373,14 +1373,14 @@ class TransportHTTP extends Base
             }
 
             // close curl
-            $this->_debug('No cURL error, closing cURL');
+            $this->debug('No cURL error, closing cURL');
             curl_close($this->ch);
             
             // try removing skippable headers
             $savedata = $data;
-            while ($this->_isSkippableCurlHeader($data))
+            while ($this->isSkippableCurlHeader($data))
             {
-                $this->_debug("Found HTTP header to skip");
+                $this->debug("Found HTTP header to skip");
                 if ($pos = strpos($data,"\r\n\r\n"))
                 {
                     $data = ltrim(substr($data,$pos));
@@ -1419,16 +1419,16 @@ class TransportHTTP extends Base
             }
             else
             {
-                $this->_debug('no proper separation of headers and document');
-                $this->_setError('no proper separation of headers and document');
+                $this->debug('no proper separation of headers and document');
+                $this->setError('no proper separation of headers and document');
                 return false;
             }
             
             $header_data = trim(substr($data,0,$pos));
             $header_array = explode($lb,$header_data);
             $data = ltrim(substr($data,$pos));
-            $this->_debug('found proper separation of headers and document');
-            $this->_debug('cleaned data, stringlen: '.strlen($data));
+            $this->debug('found proper separation of headers and document');
+            $this->debug('cleaned data, stringlen: '.strlen($data));
             
             // clean headers
             foreach ($header_array as $header_line)
@@ -1445,11 +1445,11 @@ class TransportHTTP extends Base
                         if ($cookie)
                         {
                             $this->incomingCookies[] = $cookie;
-                            $this->_debug('found cookie: ' . $cookie['name'] . ' = ' . $cookie['value']);
+                            $this->debug('found cookie: ' . $cookie['name'] . ' = ' . $cookie['value']);
                         }
                         else
                         {
-                            $this->_debug('did not find cookie in ' . trim($arr[1]));
+                            $this->debug('did not find cookie in ' . trim($arr[1]));
                         }
                     }
                 }
@@ -1470,8 +1470,8 @@ class TransportHTTP extends Base
         // see if we need to resend the request with http digest authentication
         if (isset($this->incomingHeaders['location']) && ($http_status == 301 || $http_status == 302))
         {
-            $this->_debug("Got $http_status $http_reason with Location: " . $this->incomingHeaders['location']);
-            $this->_setURL($this->incomingHeaders['location']);
+            $this->debug("Got $http_status $http_reason with Location: " . $this->incomingHeaders['location']);
+            $this->setURL($this->incomingHeaders['location']);
             $this->tryagain = true;
             return false;
         }
@@ -1479,10 +1479,10 @@ class TransportHTTP extends Base
         // see if we need to resend the request with http digest authentication
         if (isset($this->incomingHeaders['www-authenticate']) && $http_status == 401)
         {
-            $this->_debug("Got 401 $http_reason with WWW-Authenticate: " . $this->incomingHeaders['www-authenticate']);
+            $this->debug("Got 401 $http_reason with WWW-Authenticate: " . $this->incomingHeaders['www-authenticate']);
             if (strstr($this->incomingHeaders['www-authenticate'], "Digest "))
             {
-                $this->_debug('Server wants digest authentication');
+                $this->debug('Server wants digest authentication');
                 // remove "Digest " from our elements
                 $digestString = str_replace('Digest ', '', $this->incomingHeaders['www-authenticate']);
                 
@@ -1502,8 +1502,8 @@ class TransportHTTP extends Base
                     return false;
                 }
             }
-            $this->_debug('HTTP authentication failed');
-            $this->_setError('HTTP authentication failed');
+            $this->debug('HTTP authentication failed');
+            $this->setError('HTTP authentication failed');
             return false;
         }
         
@@ -1511,7 +1511,7 @@ class TransportHTTP extends Base
             ($http_status >= 400 && $http_status <= 417) ||
             ($http_status >= 501 && $http_status <= 505))
         {
-            $this->_setError("Unsupported HTTP response status $http_status $http_reason (soapclient->response has contents of the response)");
+            $this->setError("Unsupported HTTP response status $http_status $http_reason (soapclient->response has contents of the response)");
             return false;
         }
 
@@ -1525,29 +1525,29 @@ class TransportHTTP extends Base
                 {
                     // IIS 5 requires gzinflate instead of gzuncompress (similar to IE 5 and gzdeflate v. gzcompress)
                     // this means there are no Zlib headers, although there should be
-                    $this->_debug('The gzinflate function exists');
+                    $this->debug('The gzinflate function exists');
                     $datalen = strlen($data);
                     if ($this->incomingHeaders['content-encoding'] == 'deflate')
                     {
                         if ($degzdata = @gzinflate($data))
                         {
                             $data = $degzdata;
-                            $this->_debug('The payload has been inflated to ' . strlen($data) . ' bytes');
+                            $this->debug('The payload has been inflated to ' . strlen($data) . ' bytes');
                             if (strlen($data) < $datalen)
                             {
                                 // test for the case that the payload has been compressed twice
-                                $this->_debug('The inflated payload is smaller than the gzipped one; try again');
+                                $this->debug('The inflated payload is smaller than the gzipped one; try again');
                                 if ($degzdata = @gzinflate($data))
                                 {
                                     $data = $degzdata;
-                                    $this->_debug('The payload has been inflated again to ' . strlen($data) . ' bytes');
+                                    $this->debug('The payload has been inflated again to ' . strlen($data) . ' bytes');
                                 }
                             }
                         }
                         else
                         {
-                            $this->_debug('Error using gzinflate to inflate the payload');
-                            $this->_setError('Error using gzinflate to inflate the payload');
+                            $this->debug('Error using gzinflate to inflate the payload');
+                            $this->setError('Error using gzinflate to inflate the payload');
                         }
                     }
                     else if ($this->incomingHeaders['content-encoding'] == 'gzip')
@@ -1555,21 +1555,21 @@ class TransportHTTP extends Base
                         if ($degzdata = @gzinflate(substr($data, 10))) // do our best
                         {
                             $data = $degzdata;
-                            $this->_debug('The payload has been un-gzipped to ' . strlen($data) . ' bytes');
+                            $this->debug('The payload has been un-gzipped to ' . strlen($data) . ' bytes');
                             if (strlen($data) < $datalen)
                             {
                                 // test for the case that the payload has been compressed twice
-                                $this->_debug('The un-gzipped payload is smaller than the gzipped one; try again');
+                                $this->debug('The un-gzipped payload is smaller than the gzipped one; try again');
                                 if ($degzdata = @gzinflate(substr($data, 10))) {
                                     $data = $degzdata;
-                                    $this->_debug('The payload has been un-gzipped again to ' . strlen($data) . ' bytes');
+                                    $this->debug('The payload has been un-gzipped again to ' . strlen($data) . ' bytes');
                                 }
                             }
                         }
                         else
                         {
-                            $this->_debug('Error using gzinflate to un-gzip the payload');
-                            $this->_setError('Error using gzinflate to un-gzip the payload');
+                            $this->debug('Error using gzinflate to un-gzip the payload');
+                            $this->setError('Error using gzinflate to un-gzip the payload');
                         }
                     }
                     
@@ -1578,25 +1578,25 @@ class TransportHTTP extends Base
                 }
                 else
                 {
-                    $this->_debug('The server sent compressed data. Your php install must have the Zlib extension compiled in to support this.');
-                    $this->_setError('The server sent compressed data. Your php install must have the Zlib extension compiled in to support this.');
+                    $this->debug('The server sent compressed data. Your php install must have the Zlib extension compiled in to support this.');
+                    $this->setError('The server sent compressed data. Your php install must have the Zlib extension compiled in to support this.');
                 }
             }
             else
             {
-                $this->_debug('Unsupported Content-Encoding ' . $this->incomingHeaders['content-encoding']);
-                $this->_setError('Unsupported Content-Encoding ' . $this->incomingHeaders['content-encoding']);
+                $this->debug('Unsupported Content-Encoding ' . $this->incomingHeaders['content-encoding']);
+                $this->setError('Unsupported Content-Encoding ' . $this->incomingHeaders['content-encoding']);
             }
         }
         else
         {
-            $this->_debug('No Content-Encoding header');
+            $this->debug('No Content-Encoding header');
         }
         
         if (strlen($data) == 0)
         {
-            $this->_debug('no data after headers!');
-            $this->_setError('no data present after HTTP headers');
+            $this->debug('no data after headers!');
+            $this->setError('no data present after HTTP headers');
             return false;
         }
         
@@ -1612,7 +1612,7 @@ class TransportHTTP extends Base
      */
     function setContentType($type, $charset = false)
     {
-        $this->_setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
+        $this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
     }
 
     /**
@@ -1629,7 +1629,7 @@ class TransportHTTP extends Base
         }
         $this->protocolVersion = '1.1';
         $this->persistentConnection = true;
-        $this->_setHeader('Connection', 'Keep-Alive');
+        $this->setHeader('Connection', 'Keep-Alive');
         return true;
     }
 
@@ -1733,12 +1733,12 @@ class TransportHTTP extends Base
                 {
                     continue;
                 }
-                $this->_debug("check cookie for validity: ".$cookie['name'].'='.$cookie['value']);
+                $this->debug("check cookie for validity: ".$cookie['name'].'='.$cookie['value']);
                 if (isset($cookie['expires']) && !empty($cookie['expires']))
                 {
                     if (strtotime($cookie['expires']) <= time())
                     {
-                        $this->_debug('cookie has expired');
+                        $this->debug('cookie has expired');
                         continue;
                     }
                 }
@@ -1748,7 +1748,7 @@ class TransportHTTP extends Base
                     $domain = preg_quote($cookie['domain']);
                     if (! preg_match("'.*$domain$'i", $this->host))
                     {
-                        $this->_debug('cookie has different domain');
+                        $this->debug('cookie has different domain');
                         continue;
                     }
                 }
@@ -1758,17 +1758,17 @@ class TransportHTTP extends Base
                     $path = preg_quote($cookie['path']);
                     if (! preg_match("'^$path.*'i", $this->path))
                     {
-                        $this->_debug('cookie is for a different path');
+                        $this->debug('cookie is for a different path');
                         continue;
                     }
                 }
                 if (!$secure && isset($cookie['secure']) && $cookie['secure'])
                 {
-                    $this->_debug('cookie is secure, transport is not');
+                    $this->debug('cookie is secure, transport is not');
                     continue;
                 }
                 $cookie_str .= $cookie['name'] . '=' . $cookie['value'] . '; ';
-                $this->_debug('add cookie to Cookie-String: ' . $cookie['name'] . '=' . $cookie['value']);
+                $this->debug('add cookie to Cookie-String: ' . $cookie['name'] . '=' . $cookie['value']);
             }
         }
         return $cookie_str;

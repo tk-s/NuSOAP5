@@ -136,7 +136,7 @@ class Client extends \NuSOAP\Client
         $info['contenttype'] = $contenttype;
         $info['cid'] = $cid;
         
-        $this->_requestAttachments[] = $info;
+        $this->requestAttachments[] = $info;
 
         return $cid;
     }
@@ -148,7 +148,7 @@ class Client extends \NuSOAP\Client
     */
     public function clearAttachments()
     {
-        $this->_requestAttachments = array();
+        $this->requestAttachments = array();
     }
 
     /**
@@ -163,7 +163,7 @@ class Client extends \NuSOAP\Client
     */
     public function getAttachments()
     {
-        return $this->_responseAttachments;
+        return $this->responseAttachments;
     }
 
     /**
@@ -175,7 +175,7 @@ class Client extends \NuSOAP\Client
     */
     protected function getHTTPBody($soapmsg)
     {
-        if (count($this->_requestAttachments) > 0)
+        if (count($this->requestAttachments) > 0)
         {
             $params['content_type'] = 'multipart/related; type="text/xml"';
             $mimeMessage = new Mail_mimePart('', $params);
@@ -186,7 +186,7 @@ class Client extends \NuSOAP\Client
             $params['charset']      = $this->soap_defencoding;
             $mimeMessage->addSubpart($soapmsg, $params);
             
-            foreach ($this->_requestAttachments as $att)
+            foreach ($this->requestAttachments as $att)
             {
                 unset($params);
 
@@ -220,12 +220,12 @@ class Client extends \NuSOAP\Client
     
             foreach ($mimeHeaders as $k => $v)
             {
-                $this->_debug("MIME header $k: $v");
+                $this->debug("MIME header $k: $v");
                 if (strtolower($k) == 'content-type')
                 {
                     // PHP header() seems to strip leading whitespace starting
                     // the second line, so force everything to one line
-                    $this->_mimeContentType = str_replace("\r\n", " ", $v);
+                    $this->mimeContentType = str_replace("\r\n", " ", $v);
                 }
             }
     
@@ -245,9 +245,9 @@ class Client extends \NuSOAP\Client
     */
     protected function getHTTPContentType()
     {
-        if (count($this->_requestAttachments) > 0)
+        if (count($this->requestAttachments) > 0)
         {
-            return $this->_mimeContentType;
+            return $this->mimeContentType;
         }
         return parent::_getHTTPContentType();
     }
@@ -263,7 +263,7 @@ class Client extends \NuSOAP\Client
     */
     protected function getHTTPContentTypeCharset()
     {
-        if (count($this->_requestAttachments) > 0)
+        if (count($this->requestAttachments) > 0)
         {
             return false;
         }
@@ -280,11 +280,11 @@ class Client extends \NuSOAP\Client
     */
     protected function parseResponse($headers, $data)
     {
-        $this->_debug('Entering _parseResponse() for payload of length ' . strlen($data) . ' and type of ' . $headers['content-type']);
-        $this->_responseAttachments = array();
+        $this->debug('Entering _parseResponse() for payload of length ' . strlen($data) . ' and type of ' . $headers['content-type']);
+        $this->responseAttachments = array();
         if (strstr($headers['content-type'], 'multipart/related'))
         {
-            $this->_debug('Decode multipart/related');
+            $this->debug('Decode multipart/related');
             $input = '';
             foreach ($headers as $k => $v)
             {
@@ -301,18 +301,18 @@ class Client extends \NuSOAP\Client
             {
                 if (!isset($part->disposition) && (strstr($part->headers['content-type'], 'text/xml')))
                 {
-                    $this->_debug('Have root part of type ' . $part->headers['content-type']);
+                    $this->debug('Have root part of type ' . $part->headers['content-type']);
                     $root = $part->body;
                     $return = parent::_parseResponse($part->headers, $part->body);
                 }
                 else
                 {
-                    $this->_debug('Have an attachment of type ' . $part->headers['content-type']);
+                    $this->debug('Have an attachment of type ' . $part->headers['content-type']);
                     $info['data'] = $part->body;
                     $info['filename'] = isset($part->d_parameters['filename']) ? $part->d_parameters['filename'] : '';
                     $info['contenttype'] = $part->headers['content-type'];
                     $info['cid'] = $part->headers['content-id'];
-                    $this->_responseAttachments[] = $info;
+                    $this->responseAttachments[] = $info;
                 }
             }
         
@@ -325,7 +325,7 @@ class Client extends \NuSOAP\Client
             $this->setError('No root part found in multipart/related content');
             return '';
         }
-        $this->_debug('Not multipart/related');
+        $this->debug('Not multipart/related');
         return parent::_parseResponse($headers, $data);
     }
 }

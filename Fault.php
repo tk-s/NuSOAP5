@@ -124,10 +124,10 @@ class Fault extends Base
     function __construct($faultcode, $faultactor = '', $faultstring = '', $faultdetail = '')
     {
         parent::__construct();
-        $this->_faultCode = $faultcode;
-        $this->_faultActor = $faultactor;
-        $this->_faultString = $faultstring;
-        $this->_faultDetail = $faultdetail;
+        $this->faultCode = $faultcode;
+        $this->faultActor = $faultactor;
+        $this->faultString = $faultstring;
+        $this->faultDetail = $faultdetail;
     }
 
     /**
@@ -148,10 +148,10 @@ class Fault extends Base
             '<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"'.$ns_string.">\n".
                 '<SOAP-ENV:Body>'.
                 '<SOAP-ENV:Fault>'.
-                    $this->serializeVal($this->_faultCode, 'faultcode').
-                    $this->serializeVal($this->_faultActor, 'faultactor').
-                    $this->serializeVal($this->_faultString, 'faultstring').
-                    $this->serializeVal($this->_faultDetail, 'detail').
+                    $this->serializeVal($this->faultCode, 'faultcode').
+                    $this->serializeVal($this->faultActor, 'faultactor').
+                    $this->serializeVal($this->faultString, 'faultstring').
+                    $this->serializeVal($this->faultDetail, 'detail').
                 '</SOAP-ENV:Fault>'.
                 '</SOAP-ENV:Body>'.
             '</SOAP-ENV:Envelope>';

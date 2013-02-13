@@ -155,12 +155,12 @@ class Val extends Base
         $attributes = false)
     {
         parent::__construct();
-        $this->_name = $name;
-        $this->_type = $type;
-        $this->_value = $value;
-        $this->_elementNS = $elementNS;
-        $this->_typeNS = $_typeNS;
-        $this->_attributes = $attributes;
+        $this->name = $name;
+        $this->type = $type;
+        $this->value = $value;
+        $this->elementNS = $elementNS;
+        $this->typeNS = $_typeNS;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -172,7 +172,7 @@ class Val extends Base
     */
     public function serialize($use='encoded')
     {
-        return $this->serializeVal($this->_value, $this->_name, $this->_type, $this->_elementNS, $this->__typeNS, $this->_attributes, $use, true);
+        return $this->serializeVal($this->value, $this->name, $this->type, $this->elementNS, $this->_typeNS, $this->attributes, $use, true);
     }
 
     /**
@@ -183,6 +183,6 @@ class Val extends Base
     */
     public function decode()
     {
-        return $this->_value;
+        return $this->value;
     }
 }

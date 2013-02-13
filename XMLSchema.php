@@ -227,7 +227,7 @@ class XMLSchema extends Base
     public function __construct($schema = '',$xml = '',$namespaces = array())
     {
         parent::__construct();
-        $this->_debug('XMLSchema class instantiated, inside constructor');
+        $this->debug('XMLSchema class instantiated, inside constructor');
         // files
         $this->schema = $schema;
         $this->xml = $xml;
@@ -239,14 +239,14 @@ class XMLSchema extends Base
         // parse schema file
         if ($schema != '')
         {
-            $this->_debug('initial schema file: '.$schema);
+            $this->debug('initial schema file: '.$schema);
             $this->parseFile($schema, 'schema');
         }
 
         // parse xml file
         if ($xml != '')
         {
-            $this->_debug('initial xml file: '.$xml);
+            $this->debug('initial xml file: '.$xml);
             $this->parseFile($xml, 'xml');
         }
 
@@ -271,14 +271,14 @@ class XMLSchema extends Base
             {
                 $msg = 'Error reading XML from '.$xml;
                 $this->setError($msg);
-                $this->_debug($msg);
+                $this->debug($msg);
                 return false;
             }
             else
             {
-                $this->_debug("parsing $xml");
+                $this->debug("parsing $xml");
                 $this->parseString($xmlStr,$type);
-                $this->_debug("done parsing $xml");
+                $this->debug("done parsing $xml");
                 return true;
             }
         }
@@ -325,8 +325,8 @@ class XMLSchema extends Base
                 xml_get_current_line_number($this->parser),
                 xml_error_string(xml_get_error_code($this->parser))
                 );
-                $this->_debug($errstr);
-                $this->_debug("XML payload:\n" . $xml);
+                $this->debug($errstr);
+                $this->debug("XML payload:\n" . $xml);
                 $this->setError($errstr);
             }
             
@@ -334,7 +334,7 @@ class XMLSchema extends Base
         }
         else
         {
-            $this->_debug('no xml passed to parseString()!!');
+            $this->debug('no xml passed to parseString()!!');
             $this->setError('no xml passed to parseString()!!');
         }
     }
@@ -400,11 +400,11 @@ class XMLSchema extends Base
                 // if ns declarations, add to class level array of valid namespaces
                 if (preg_match('/^xmlns/',$k))
                 {
-                    //$this->_xdebug("$k: $v");
-                    //$this->_xdebug('ns_prefix: '.$this->getPrefix($k));
+                    //$this->xdebug("$k: $v");
+                    //$this->xdebug('ns_prefix: '.$this->getPrefix($k));
                     if ($ns_prefix = substr(strrchr($k,':'),1))
                     {
-                        //$this->_xdebug("Add namespace[$ns_prefix] = $v");
+                        //$this->xdebug("Add namespace[$ns_prefix] = $v");
                         $this->namespaces[$ns_prefix] = $v;
                     }
                     else
@@ -442,7 +442,7 @@ class XMLSchema extends Base
             case 'choice':
             case 'group':
             case 'sequence':
-                //$this->_xdebug("compositor $name for currentComplexType: $this->currentComplexType and currentElement: $this->currentElement");
+                //$this->xdebug("compositor $name for currentComplexType: $this->currentComplexType and currentElement: $this->currentElement");
                 $this->complexTypes[$this->currentComplexType]['compositor'] = $name;
                 //if ($name == 'all' || $name == 'sequence'){
                 //  $this->complexTypes[$this->currentComplexType]['phpType'] = 'struct';
@@ -450,8 +450,8 @@ class XMLSchema extends Base
             break;
             
             case 'attribute':   // complexType attribute
-                //$this->_xdebug("parsing attribute $attrs[name] $attrs[ref] of value: ".$attrs['http://schemas.xmlsoap.org/wsdl/:arrayType']);
-                $this->_xdebug("parsing attribute:");
+                //$this->xdebug("parsing attribute $attrs[name] $attrs[ref] of value: ".$attrs['http://schemas.xmlsoap.org/wsdl/:arrayType']);
+                $this->xdebug("parsing attribute:");
                 $this->appendDebug($this->varDump($attrs));
                 if (!isset($attrs['form']))
                 {
@@ -525,7 +525,7 @@ class XMLSchema extends Base
             break;
             
             case 'complexContent':  // (optional) content for a complexType
-                $this->_xdebug("do nothing for element $name");
+                $this->xdebug("do nothing for element $name");
             break;
             
             case 'complexType':
@@ -534,7 +534,7 @@ class XMLSchema extends Base
                 {
                     // TODO: what is the scope of named complexTypes that appear
                     //       nested within other c complexTypes?
-                    $this->_xdebug('processing named complexType '.$attrs['name']);
+                    $this->xdebug('processing named complexType '.$attrs['name']);
                     //$this->currentElement = false;
                     $this->currentComplexType = $attrs['name'];
                     $this->complexTypes[$this->currentComplexType] = $attrs;
@@ -548,7 +548,7 @@ class XMLSchema extends Base
                     //            </complexType>
                     if (isset($attrs['base']) && preg_match('/:Array$/',$attrs['base']))
                     {
-                        $this->_xdebug('complexType is unusual array');
+                        $this->xdebug('complexType is unusual array');
                         $this->complexTypes[$this->currentComplexType]['phpType'] = 'array';
                     }
                     else
@@ -558,8 +558,8 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $name = $this->_createTypeName($this->currentElement);
-                    $this->_xdebug('processing unnamed complexType for element ' . $this->currentElement . ' named ' . $name);
+                    $name = $this->createTypeName($this->currentElement);
+                    $this->xdebug('processing unnamed complexType for element ' . $this->currentElement . ' named ' . $name);
                     $this->currentComplexType = $name;
                     //$this->currentElement = false;
                     $this->complexTypes[$this->currentComplexType] = $attrs;
@@ -573,7 +573,7 @@ class XMLSchema extends Base
                     //            </complexType>
                     if (isset($attrs['base']) && preg_match('/:Array$/',$attrs['base']))
                     {
-                        $this->_xdebug('complexType is unusual array');
+                        $this->xdebug('complexType is unusual array');
                         $this->complexTypes[$this->currentComplexType]['phpType'] = 'array';
                     }
                     else
@@ -600,13 +600,13 @@ class XMLSchema extends Base
                 }
                 if (isset($attrs['type']))
                 {
-                    $this->_xdebug("processing typed element ".$attrs['name']." of type ".$attrs['type']);
+                    $this->xdebug("processing typed element ".$attrs['name']." of type ".$attrs['type']);
                     if (! $this->getPrefix($attrs['type']))
                     {
                         if ($this->defaultNamespace[$pos])
                         {
                             $attrs['type'] = $this->defaultNamespace[$pos] . ':' . $attrs['type'];
-                            $this->_xdebug('used default namespace to make type ' . $attrs['type']);
+                            $this->xdebug('used default namespace to make type ' . $attrs['type']);
                         }
                     }
                     // This is for constructs like
@@ -618,7 +618,7 @@ class XMLSchema extends Base
                     //            </complexType>
                     if ($this->currentComplexType && $this->complexTypes[$this->currentComplexType]['phpType'] == 'array')
                     {
-                        $this->_xdebug('arrayType for unusual array is ' . $attrs['type']);
+                        $this->xdebug('arrayType for unusual array is ' . $attrs['type']);
                         $this->complexTypes[$this->currentComplexType]['arrayType'] = $attrs['type'];
                     }
                     $this->currentElement = $attrs['name'];
@@ -626,14 +626,14 @@ class XMLSchema extends Base
                 }
                 else if (isset($attrs['ref']))
                 {
-                    $this->_xdebug("processing element as ref to ".$attrs['ref']);
+                    $this->xdebug("processing element as ref to ".$attrs['ref']);
                     $this->currentElement = "ref to ".$attrs['ref'];
                     $ename = $this->getLocalPart($attrs['ref']);
                 }
                 else
                 {
-                    $type = $this->_createTypeName($this->currentComplexType . '_' . $attrs['name']);
-                    $this->_xdebug("processing untyped element " . $attrs['name'] . ' type ' . $type);
+                    $type = $this->createTypeName($this->currentComplexType . '_' . $attrs['name']);
+                    $this->xdebug("processing untyped element " . $attrs['name'] . ' type ' . $type);
                     $this->currentElement = $attrs['name'];
                     $attrs['type'] = $this->schemaTargetNamespace . ':' . $type;
                     $ename = $attrs['name'];
@@ -641,19 +641,19 @@ class XMLSchema extends Base
                 
                 if (isset($ename) && $this->currentComplexType)
                 {
-                    $this->_xdebug("add element $ename to complexType $this->currentComplexType");
+                    $this->xdebug("add element $ename to complexType $this->currentComplexType");
                     $this->complexTypes[$this->currentComplexType]['elements'][$ename] = $attrs;
                 }
                 else if (!isset($attrs['ref']))
                 {
-                    $this->_xdebug("add element $ename to elements array");
+                    $this->xdebug("add element $ename to elements array");
                     $this->elements[ $attrs['name'] ] = $attrs;
                     $this->elements[ $attrs['name'] ]['typeClass'] = 'element';
                 }
             break;
             
             case 'enumeration': //  restriction value list member
-                $this->_xdebug('enumeration ' . $attrs['value']);
+                $this->xdebug('enumeration ' . $attrs['value']);
                 if ($this->currentSimpleType)
                 {
                     $this->simpleTypes[$this->currentSimpleType]['enumeration'][] = $attrs['value'];
@@ -665,7 +665,7 @@ class XMLSchema extends Base
             break;
             
             case 'extension':   // simpleContent or complexContent type extension
-                $this->_xdebug('extension ' . $attrs['base']);
+                $this->xdebug('extension ' . $attrs['base']);
                 if ($this->currentComplexType)
                 {
                     $ns = $this->getPrefix($attrs['base']);
@@ -680,19 +680,19 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $this->_xdebug('no current complexType to set extensionBase');
+                    $this->xdebug('no current complexType to set extensionBase');
                 }
             break;
             
             case 'import':
                 if (isset($attrs['schemaLocation']))
                 {
-                    $this->_xdebug('import namespace ' . $attrs['namespace'] . ' from ' . $attrs['schemaLocation']);
+                    $this->xdebug('import namespace ' . $attrs['namespace'] . ' from ' . $attrs['schemaLocation']);
                     $this->imports[$attrs['namespace']][] = array('location' => $attrs['schemaLocation'], 'loaded' => false);
                 }
                 else
                 {
-                    $this->_xdebug('import namespace ' . $attrs['namespace']);
+                    $this->xdebug('import namespace ' . $attrs['namespace']);
                     $this->imports[$attrs['namespace']][] = array('location' => '', 'loaded' => true);
                     if (! $this->getPrefixFromNamespace($attrs['namespace'])) {
                         $this->namespaces['ns'.(count($this->namespaces)+1)] = $attrs['namespace'];
@@ -703,21 +703,21 @@ class XMLSchema extends Base
             case 'include':
                 if (isset($attrs['schemaLocation']))
                 {
-                    $this->_xdebug('include into namespace ' . $this->schemaTargetNamespace . ' from ' . $attrs['schemaLocation']);
+                    $this->xdebug('include into namespace ' . $this->schemaTargetNamespace . ' from ' . $attrs['schemaLocation']);
                     $this->imports[$this->schemaTargetNamespace][] = array('location' => $attrs['schemaLocation'], 'loaded' => false);
                 }
                 else
                 {
-                    $this->_xdebug('ignoring invalid XML Schema construct: include without schemaLocation attribute');
+                    $this->xdebug('ignoring invalid XML Schema construct: include without schemaLocation attribute');
                 }
             break;
             
             case 'list':    // simpleType value list
-                $this->_xdebug("do nothing for element $name");
+                $this->xdebug("do nothing for element $name");
             break;
             
             case 'restriction': // simpleType, simpleContent or complexContent value restriction
-                $this->_xdebug('restriction ' . $attrs['base']);
+                $this->xdebug('restriction ' . $attrs['base']);
                 if ($this->currentSimpleType)
                 {
                     $this->simpleTypes[$this->currentSimpleType]['type'] = $attrs['base'];
@@ -759,7 +759,7 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $this->_xdebug("do nothing for element $name because there is no current complexType");
+                    $this->xdebug("do nothing for element $name because there is no current complexType");
                 }
             break;
             
@@ -767,7 +767,7 @@ class XMLSchema extends Base
                 array_push($this->simpleTypeStack, $this->currentSimpleType);
                 if (isset($attrs['name']))
                 {
-                    $this->_xdebug("processing simpleType for name " . $attrs['name']);
+                    $this->xdebug("processing simpleType for name " . $attrs['name']);
                     $this->currentSimpleType = $attrs['name'];
                     $this->simpleTypes[ $attrs['name'] ] = $attrs;
                     $this->simpleTypes[ $attrs['name'] ]['typeClass'] = 'simpleType';
@@ -775,8 +775,8 @@ class XMLSchema extends Base
                 }
                 else
                 {
-                    $name = $this->_createTypeName($this->currentComplexType . '_' . $this->currentElement);
-                    $this->_xdebug('processing unnamed simpleType for element ' . $this->currentElement . ' named ' . $name);
+                    $name = $this->createTypeName($this->currentComplexType . '_' . $this->currentElement);
+                    $this->xdebug('processing unnamed simpleType for element ' . $this->currentElement . ' named ' . $name);
                     $this->currentSimpleType = $name;
                     //$this->currentElement = false;
                     $this->simpleTypes[$this->currentSimpleType] = $attrs;
@@ -785,11 +785,11 @@ class XMLSchema extends Base
             break;
             
             case 'union':   // simpleType type list
-                $this->_xdebug("do nothing for element $name");
+                $this->xdebug("do nothing for element $name");
             break;
             
             default:
-                $this->_xdebug("do not have any logic to process element $name");
+                $this->xdebug("do not have any logic to process element $name");
         }
     }
 
@@ -824,22 +824,22 @@ class XMLSchema extends Base
         // move on...
         if ($name == 'complexType')
         {
-            $this->_xdebug('done processing complexType ' . ($this->currentComplexType ? $this->currentComplexType : '(unknown)'));
-            $this->_xdebug($this->varDump($this->complexTypes[$this->currentComplexType]));
+            $this->xdebug('done processing complexType ' . ($this->currentComplexType ? $this->currentComplexType : '(unknown)'));
+            $this->xdebug($this->varDump($this->complexTypes[$this->currentComplexType]));
             $this->currentComplexType = array_pop($this->complexTypeStack);
             //$this->currentElement = false;
         }
         
         if ($name == 'element')
         {
-            $this->_xdebug('done processing element ' . ($this->currentElement ? $this->currentElement : '(unknown)'));
+            $this->xdebug('done processing element ' . ($this->currentElement ? $this->currentElement : '(unknown)'));
             $this->currentElement = array_pop($this->elementStack);
         }
         
         if ($name == 'simpleType')
         {
-            $this->_xdebug('done processing simpleType ' . ($this->currentSimpleType ? $this->currentSimpleType : '(unknown)'));
-            $this->_xdebug($this->varDump($this->simpleTypes[$this->currentSimpleType]));
+            $this->xdebug('done processing simpleType ' . ($this->currentSimpleType ? $this->currentSimpleType : '(unknown)'));
+            $this->xdebug($this->varDump($this->simpleTypes[$this->currentSimpleType]));
             $this->currentSimpleType = array_pop($this->simpleTypeStack);
         }
     }
@@ -1023,7 +1023,7 @@ class XMLSchema extends Base
     */
     protected function xdebug($string)
     {
-        $this->_debug('<' . $this->schemaTargetNamespace . '> '.$string);
+        $this->debug('<' . $this->schemaTargetNamespace . '> '.$string);
     }
 
     /**
@@ -1077,7 +1077,7 @@ class XMLSchema extends Base
     */
     public function getTypeDef($type)
     {
-        //$this->_debug("in getTypeDef for type $type");
+        //$this->debug("in getTypeDef for type $type");
         if (substr($type, -1) == '^')
         {
             $is_element = 1;
@@ -1090,12 +1090,12 @@ class XMLSchema extends Base
 
         if ((! $is_element) && isset($this->complexTypes[$type]))
         {
-            $this->_xdebug("in getTypeDef, found complexType $type");
+            $this->xdebug("in getTypeDef, found complexType $type");
             return $this->complexTypes[$type];
         }
         else if ((! $is_element) && isset($this->simpleTypes[$type]))
         {
-            $this->_xdebug("in getTypeDef, found simpleType $type");
+            $this->xdebug("in getTypeDef, found simpleType $type");
             if (!isset($this->simpleTypes[$type]['phpType']))
             {
                 // get info for type to tack onto the simple type
@@ -1105,8 +1105,8 @@ class XMLSchema extends Base
                 $etype = $this->getTypeDef($uqType);
                 if ($etype)
                 {
-                    $this->_xdebug("in getTypeDef, found type for simpleType $type:");
-                    $this->_xdebug($this->varDump($etype));
+                    $this->xdebug("in getTypeDef, found type for simpleType $type:");
+                    $this->xdebug($this->varDump($etype));
                     if (isset($etype['phpType']))
                     {
                         $this->simpleTypes[$type]['phpType'] = $etype['phpType'];
@@ -1121,7 +1121,7 @@ class XMLSchema extends Base
         }
         else if (isset($this->elements[$type]))
         {
-            $this->_xdebug("in getTypeDef, found element $type");
+            $this->xdebug("in getTypeDef, found element $type");
             if (!isset($this->elements[$type]['phpType']))
             {
                 // get info for type to tack onto the element
@@ -1130,8 +1130,8 @@ class XMLSchema extends Base
                 $etype = $this->getTypeDef($uqType);
                 if ($etype)
                 {
-                    $this->_xdebug("in getTypeDef, found type for element $type:");
-                    $this->_xdebug($this->varDump($etype));
+                    $this->xdebug("in getTypeDef, found type for element $type:");
+                    $this->xdebug($this->varDump($etype));
                     if (isset($etype['phpType']))
                     {
                         $this->elements[$type]['phpType'] = $etype['phpType'];
@@ -1149,7 +1149,7 @@ class XMLSchema extends Base
                 }
                 else if ($ns == 'http://www.w3.org/2001/XMLSchema')
                 {
-                    $this->_xdebug("in getTypeDef, element $type is an XSD type");
+                    $this->xdebug("in getTypeDef, element $type is an XSD type");
                     $this->elements[$type]['phpType'] = 'scalar';
                 }
             }
@@ -1157,18 +1157,18 @@ class XMLSchema extends Base
         }
         else if (isset($this->attributes[$type]))
         {
-            $this->_xdebug("in getTypeDef, found attribute $type");
+            $this->xdebug("in getTypeDef, found attribute $type");
             return $this->attributes[$type];
         }
         else if (preg_match('/_ContainedType$/', $type))
         {
-            $this->_xdebug("in getTypeDef, have an untyped element $type");
+            $this->xdebug("in getTypeDef, have an untyped element $type");
             $typeDef['typeClass'] = 'simpleType';
             $typeDef['phpType'] = 'scalar';
             $typeDef['type'] = 'http://www.w3.org/2001/XMLSchema:string';
             return $typeDef;
         }
-        $this->_xdebug("in getTypeDef, did not find $type");
+        $this->xdebug("in getTypeDef, did not find $type");
         return false;
     }
 
@@ -1330,7 +1330,7 @@ class XMLSchema extends Base
             'arrayType' => $arrayType
         );
         
-        $this->_xdebug("addComplexType $name:");
+        $this->xdebug("addComplexType $name:");
         $this->appendDebug($this->varDump($this->complexTypes[$name]));
     }
     
@@ -1361,7 +1361,7 @@ class XMLSchema extends Base
             'enumeration'   => $enumeration
         );
         
-        $this->_xdebug("addSimpleType $name:");
+        $this->xdebug("addSimpleType $name:");
         $this->appendDebug($this->varDump($this->simpleTypes[$name]));
     }
 
@@ -1381,7 +1381,7 @@ class XMLSchema extends Base
         $this->elements[ $attrs['name'] ] = $attrs;
         $this->elements[ $attrs['name'] ]['typeClass'] = 'element';
         
-        $this->_xdebug("addElement " . $attrs['name']);
+        $this->xdebug("addElement " . $attrs['name']);
         $this->appendDebug($this->varDump($this->elements[ $attrs['name'] ]));
     }
 }

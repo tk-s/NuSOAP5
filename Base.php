@@ -987,7 +987,7 @@ class Base
         {
             if ($ns == $n || $ns == $p)
             {
-                static::$_usedNamespaces[$p] = $n;
+                static::$usedNamespaces[$p] = $n;
                 return $p;
             }
         }
